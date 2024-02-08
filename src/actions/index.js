@@ -161,7 +161,7 @@ export const installApp = (data) => {
   app.action = gene_name();
   store.dispatch({ type: "ADDAPP", payload: app });
   store.dispatch({ type: "DESKADD", payload: app });
-  store.dispatch({ type: "WNSTORE", payload: "mnmz" });
+  // store.dispatch({ type: "WNSTORE", payload: "mnmz" });
 };
 
 export const getTreeValue = (obj, path) => {
