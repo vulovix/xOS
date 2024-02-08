@@ -8,6 +8,7 @@ var { taskbar, desktop, pinned, recent } = {
     "Browser",
     "Store",
     "Spotify",
+    "Terminal",
   ],
   desktop: (localStorage.getItem("desktop") &&
     JSON.parse(localStorage.getItem("desktop"))) || [

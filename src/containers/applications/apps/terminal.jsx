@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import i18next from "i18next";
 import login from "../../../components/login";
+import { installApp, delApp } from "../../../actions";
 
-import { ToolBar } from "../../../utils/general";
+import { Icon, ToolBar } from "../../../utils/general";
 import dirs from "./assets/dir.json";
 
 export const WnTerminal = () => {
@@ -63,6 +64,7 @@ export const WnTerminal = () => {
       arg = arr.splice(1, arr.length).join(" ") || "";
 
     arg = arg.trim();
+    console.log(arg);
 
     if (type == "echo") {
       if (arg.length) {
@@ -73,6 +75,49 @@ export const WnTerminal = () => {
     } else if (type == "eval") {
       if (arg.length) {
         tmpStack.push(eval(arg).toString());
+      }
+    } else if (type == "install") {
+      if (arg.length) {
+        tmpStack.push("Installing app");
+        var arg = arg.toString().split(" ");
+        console.log(arg);
+        const [appName, iFrameURL, iconURL] = arg;
+        var json = {
+          name: appName,
+          icon: iconURL,
+          type: "app",
+          data: {
+            type: "IFrame",
+            url: iFrameURL,
+            invert: false,
+            pwa: true,
+          },
+        };
+        installApp(json);
+        tmpStack.push("App installed");
+      }
+    } else if (type == "uninstall") {
+      if (arg.length) {
+        tmpStack.push("Uninstalling app");
+        var arg = arg.toString().split(" ");
+        var AppName = arg[0];
+        tmpStack.push(AppName);
+        var apps = document.getElementsByClassName("dskApp");
+        var Mainmenu = "";
+        for (let i = 0; i < apps.length; i++) {
+          var app = apps[i];
+          var Appcname = app.getElementsByClassName("appName")[0];
+          var menu = app.getElementsByClassName("uicon")[0];
+          console.log(Appcname.innerHTML);
+          if (Appcname.innerHTML == AppName) {
+            var Mainmenu = menu;
+            console.log(menu);
+          }
+        }
+        console.log(Mainmenu);
+
+        delApp("delete", Mainmenu);
+        tmpStack.push("App uninstalled");
       }
     } else if (type == "python") {
       if (arg.length) {
@@ -154,12 +199,12 @@ export const WnTerminal = () => {
         cmdcont.style.color = color;
       } else {
         tmpStack.push(
-          "Set the color of the background and the text for the console.",
+          "Set the color of the background and the text for the console."
         );
         tmpStack.push("COLOR [arg]");
         tmpStack.push("arg\t\tSpecifies the color for the console output");
         tmpStack.push(
-          "The color attribute is a combination of the following values:",
+          "The color attribute is a combination of the following values:"
         );
         tmpStack.push("0\t\tBlack");
         tmpStack.push("1\t\tBlue");
@@ -217,7 +262,7 @@ export const WnTerminal = () => {
             })
             .replaceAll(":", ".") +
           "." +
-          Math.floor(Math.random() * 100),
+          Math.floor(Math.random() * 100)
       );
     } else if (type == "exit") {
       tmpStack = ["OS [Version 10.0.22000.51]", ""];
@@ -272,6 +317,8 @@ export const WnTerminal = () => {
         "VER            Displays the Windows version.",
         "PYTHON         EXECUTE PYTHON CODE.",
         "EVAL           RUNS JavaScript statements.",
+        "INSTALL        Instal an app with app name, iFrame URL and icon URL",
+        "UNINSTALL      Uninstal an app with app name",
       ];
 
       for (var i = 0; i < helpArr.length; i++) {
@@ -290,7 +337,7 @@ export const WnTerminal = () => {
       tmpStack.push("Postal: " + IP.postal);
     } else {
       tmpStack.push(
-        `'${type}' is not recognized as an internal or external command,`,
+        `'${type}' is not recognized as an internal or external command,`
       );
       tmpStack.push("operable program or batch file.");
       tmpStack.push("");
