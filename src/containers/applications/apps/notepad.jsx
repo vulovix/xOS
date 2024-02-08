@@ -4,7 +4,9 @@ import { ToolBar } from "../../../utils/general";
 
 export const Notepad = () => {
   const wnapp = useSelector((state) => state.apps.notepad);
-
+  const onChange = (e) => {
+    localStorage.setItem("note", e.target.value);
+  };
   return (
     <div
       className="notepad floatTab dpShad"
@@ -31,7 +33,12 @@ export const Notepad = () => {
         </div>
         <div className="restWindow h-full flex-grow">
           <div className="w-full h-full overflow-hidden">
-            <textarea className="noteText win11Scroll" id="textpad" />
+            <textarea
+              onChange={onChange}
+              defaultValue={localStorage.getItem("note") || ""}
+              className="noteText win11Scroll"
+              id="textpad"
+            />
           </div>
         </div>
       </div>

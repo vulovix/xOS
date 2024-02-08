@@ -8,7 +8,7 @@ if (import.meta.env.MODE == "development") {
 const defState = {};
 for (var i = 0; i < allApps.length; i++) {
   defState[allApps[i].icon] = allApps[i];
-  defState[allApps[i].icon].size = "full";
+  defState[allApps[i].icon].size = "mini";
   defState[allApps[i].icon].hide = true;
   defState[allApps[i].icon].max = null;
   defState[allApps[i].icon].z = 0;
@@ -64,7 +64,7 @@ const appReducer = (state = defState, action) => {
     var obj = { ...tmpState["terminal"] };
     obj.dir = action.payload;
 
-    obj.size = "full";
+    obj.size = "mini";
     obj.hide = false;
     obj.max = true;
     tmpState.hz += 1;
