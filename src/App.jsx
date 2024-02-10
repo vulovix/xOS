@@ -16,7 +16,7 @@ import {
 import Taskbar from "./components/taskbar";
 import { Background, BootScreen, LockScreen } from "./containers/background";
 
-import { loadSettings } from "./actions";
+import { loadSettings, preinstallApps } from "./actions";
 import * as Applications from "./containers/applications";
 import * as Drafts from "./containers/applications/draft";
 
@@ -88,7 +88,7 @@ function App() {
     } catch (err) {}
 
     var actionType0 = getComputedStyle(event.target).getPropertyValue(
-      "--prefix",
+      "--prefix"
     );
 
     ess.forEach((item, i) => {
@@ -129,6 +129,7 @@ function App() {
   useEffect(() => {
     if (!window.onstart) {
       loadSettings();
+      preinstallApps();
       window.onstart = setTimeout(() => {
         // console.log("prematurely loading ( ﾉ ﾟｰﾟ)ﾉ");
         dispatch({ type: "WALLBOOTED" });

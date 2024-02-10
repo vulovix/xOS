@@ -83,7 +83,7 @@ export const WnTerminal = () => {
         console.log(arg);
         const [appName, iFrameURL, iconURL] = arg;
         var json = {
-          name: appName,
+          name: appName.replaceAll("_", " "),
           icon: iconURL,
           type: "app",
           data: {
@@ -99,8 +99,7 @@ export const WnTerminal = () => {
     } else if (type == "uninstall") {
       if (arg.length) {
         tmpStack.push("Uninstalling app");
-        var arg = arg.toString().split(" ");
-        var AppName = arg[0];
+        var AppName = arg.toString().replaceAll("_", " ");
         tmpStack.push(AppName);
         var apps = document.getElementsByClassName("dskApp");
         var Mainmenu = "";

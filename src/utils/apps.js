@@ -285,7 +285,7 @@ const apps = [
     icon: "github",
     type: "app",
     action: "EXTERNAL",
-    payload: "https://github.com/vulovix/win-os",
+    payload: "https://github.com/vulovix/xOS",
   },
   // {
   //   name: "MindHub",

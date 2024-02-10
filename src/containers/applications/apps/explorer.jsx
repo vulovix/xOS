@@ -128,7 +128,7 @@ export const Explorer = () => {
             {curr.name}
           </div>
           <Icon className="dirchev" fafa="faChevronRight" width={8} />
-        </div>,
+        </div>
       );
 
       curr = curr.host;
@@ -140,7 +140,7 @@ export const Explorer = () => {
           This PC
         </div>
         <Icon className="dirchev" fafa="faChevronRight" width={8} />
-      </div>,
+      </div>
     );
 
     arr.push(
@@ -151,7 +151,7 @@ export const Explorer = () => {
           width={16}
         />
         <Icon className="dirchev" fafa="faChevronRight" width={8} />
-      </div>,
+      </div>
     );
 
     return (
@@ -302,6 +302,7 @@ const ContentArea = ({ searchtxt }) => {
       <div className="contentwrap win11Scroll">
         <div className="gridshow" data-size="lg">
           {fdata.data.map((item, i) => {
+            console.log(item.name, searchtxt);
             return (
               item.name.includes(searchtxt) && (
                 <div

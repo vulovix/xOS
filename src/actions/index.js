@@ -254,6 +254,43 @@ export const loadSettings = () => {
   }
 };
 
+export const preinstallApps = () => {
+  const installed = localStorage.getItem("installed");
+  if (installed === null) {
+    const configureApp = ({ appName, appURL, appIcon }) => ({
+      type: "app",
+      icon: appIcon,
+      name: appName,
+      data: {
+        pwa: true,
+        url: appURL,
+        invert: false,
+        type: "IFrame",
+      },
+    });
+    const preinstalledApps = [
+      {
+        appName: "xOS Code",
+        appURL: "https://code.xos.dev",
+        appIcon: "https://code.xos.dev/favicon.png",
+      },
+      {
+        appName: "xOS Notepad",
+        appURL: "https://notepad.xos.dev",
+        appIcon: "https://notepad.xos.dev/favicon.png",
+      },
+      {
+        appName: "xOS Markdown",
+        appURL: "https://markdown.xos.dev",
+        appIcon: "https://markdown.xos.dev/favicon.png",
+      },
+    ];
+
+    const appsToPreinstall = preinstalledApps.map((app) => configureApp(app));
+    appsToPreinstall.forEach(installApp);
+  }
+};
+
 // mostly file explorer
 export const handleFileOpen = (id) => {
   // handle double click open
