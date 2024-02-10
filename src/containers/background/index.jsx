@@ -124,7 +124,7 @@ export const LockScreen = (props) => {
           {new Date().toLocaleTimeString("en-US", {
             hour: "numeric",
             minute: "numeric",
-            hour12: true,
+            hour12: false,
           })}
         </div>
         <div className="text-lg font-medium text-gray-200">
@@ -138,7 +138,7 @@ export const LockScreen = (props) => {
       <div className="fadeinScreen" data-faded={!lock} data-unlock={unlocked}>
         <Image
           className="rounded-full overflow-hidden"
-          src="img/asset/prof.jpg"
+          src="img/asset/prof.png"
           w={200}
           ext
         />

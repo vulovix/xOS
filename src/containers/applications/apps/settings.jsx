@@ -253,7 +253,7 @@ export const Settings = () => {
                                 {new Date().toLocaleTimeString("en-US", {
                                   hour: "numeric",
                                   minute: "numeric",
-                                  hour12: true,
+                                  hour12: false,
                                 })}
                               </h1>
                             </div>
@@ -326,7 +326,7 @@ export const Settings = () => {
                           );
                         default:
                           return console.log(
-                            `error - type ${e.type} not found`,
+                            `error - type ${e.type} not found`
                           );
                       }
                     })}

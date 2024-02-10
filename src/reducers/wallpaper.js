@@ -2,27 +2,35 @@ var wps = localStorage.getItem("wps") || 0;
 var locked = localStorage.getItem("locked");
 
 const walls = [
-  "default/img0.jpg",
-  "dark/img0.jpg",
-  "ThemeA/img0.jpg",
-  "ThemeA/img1.jpg",
-  "ThemeA/img2.jpg",
-  "ThemeA/img3.jpg",
-  "ThemeB/img0.jpg",
-  "ThemeB/img1.jpg",
-  "ThemeB/img2.jpg",
-  "ThemeB/img3.jpg",
-  "ThemeC/img0.jpg",
-  "ThemeC/img1.jpg",
-  "ThemeC/img2.jpg",
-  "ThemeC/img3.jpg",
-  "ThemeD/img0.jpg",
-  "ThemeD/img1.jpg",
-  "ThemeD/img2.jpg",
-  "ThemeD/img3.jpg",
+  "Windows/img0.jpg",
+  "Windows/img1.jpg",
+  "Windows/img2.jpg",
+  "Windows/img3.jpg",
+  "Windows/img4.jpg",
+  "Windows/img5.jpg",
+
+  "Mac/img0.jpg",
+  "Mac/img1.jpg",
+
+  "Chill/img0.jpg",
+  "Chill/img1.jpg",
+  "Chill/img2.jpg",
+  "Chill/img3.jpg",
+  "Chill/img4.jpg",
+  "Chill/img5.jpg",
+  "Chill/img6.jpg",
+  "Chill/img7.jpg",
+  "Chill/img8.jpg",
+  "Chill/img9.jpg",
+  "Chill/img10.jpg",
+
+  "Urban/img0.jpg",
+  "Urban/img1.jpg",
+  "Urban/img2.jpg",
+  "Urban/img3.jpg",
 ];
 
-const themes = ["default", "dark", "ThemeA", "ThemeB", "ThemeD", "ThemeC"];
+const themes = ["Windows", "Mac", "Chill", "Urban"];
 
 const defState = {
   themes: themes,

@@ -302,7 +302,6 @@ const ContentArea = ({ searchtxt }) => {
       <div className="contentwrap win11Scroll">
         <div className="gridshow" data-size="lg">
           {fdata.data.map((item, i) => {
-            console.log(item.name, searchtxt);
             return (
               item.name.includes(searchtxt) && (
                 <div
