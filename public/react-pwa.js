@@ -1,20 +1,20 @@
-document.write(
-  "<scr" +
-    'ipt async src="https://www.googletagmanager.com/gtag/js?id=G-QNW5K71MZ0"></scr' +
-    "ipt>",
-);
+// document.write(
+//   "<scr" +
+//     'ipt async src="https://www.googletagmanager.com/gtag/js?id=G-QNW5K71MZ0"></scr' +
+//     "ipt>",
+// );
 
 //if (window.location.hostname == "win11.blueedge.me") {
 //  window.location.href = "https://wintest.andrewstech.me/";
 //}
 
-window.dataLayer = window.dataLayer || [];
-function gtag() {
-  dataLayer.push(arguments);
-}
-gtag("js", new Date());
+// window.dataLayer = window.dataLayer || [];
+// function gtag() {
+//   dataLayer.push(arguments);
+// }
+// gtag("js", new Date());
 
-gtag("config", "G-QNW5K71MZ0");
+// gtag("config", "G-QNW5K71MZ0");
 
 pikachu();
 mario();
