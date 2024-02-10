@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as Actions from "../../actions";
 import { getTreeValue } from "../../actions";
@@ -44,23 +44,85 @@ export const DesktopApp = () => {
     arr.apps = tmpApps;
     return arr;
   });
-  const dispatch = useDispatch();
+
+  const charsRef = useRef([]);
+  const [draggingIndex, setDraggingIndex] = useState(null);
+
+  useEffect(() => {
+    const preventDefault = (e) => {
+      e.dataTransfer.dropEffect = "move";
+      e.preventDefault();
+    }
+    document.addEventListener("dragover", preventDefault);
+
+    const startDrag = (index) => {
+      setDraggingIndex(index);
+    };
+
+    const endDrag = () => {
+      setDraggingIndex(null);
+    };
+
+    const dragEnd = (e, elementRef, left, top) => {
+      elementRef.current.style.opacity = '1'; 
+      elementRef.current.style.left = `${e.clientX - left - (elementRef.current.offsetWidth / 2)}px`;
+      elementRef.current.style.top = `${e.clientY - top - (elementRef.current.offsetHeight / 2)}px`;
+      endDrag();
+    };
+
+    const dragTouch = (e, elementRef) => {
+      let touchLocation = e.targetTouches[0];
+      let offsetX = elementRef.current.offsetWidth / 2;
+      let offsetY = elementRef.current.offsetHeight / 2;
+      elementRef.current.style.left = `${touchLocation.clientX - offsetX}px`;
+      elementRef.current.style.top = `${touchLocation.clientY - offsetY}px`;
+    };
+
+    charsRef.current.forEach((elementRef, index) => {
+      const rect = elementRef.current.getBoundingClientRect();
+      elementRef.current.addEventListener("dragstart", () => startDrag(index));
+      elementRef.current.addEventListener("dragend", (e) => dragEnd(e, elementRef, rect.left, rect.top));
+      elementRef.current.addEventListener("touchmove", (e) => dragTouch(e, elementRef));
+      elementRef.current.addEventListener("touchend", endDrag);
+      elementRef.current.addEventListener("touchcancel", endDrag);
+    });
+
+    return () => {
+      document.removeEventListener("dragover", preventDefault);
+      charsRef.current.forEach((elementRef, index) => {
+        const rect = elementRef.current.getBoundingClientRect();
+
+        elementRef.current.removeEventListener("dragstart", () => startDrag(index));
+        elementRef.current.removeEventListener("dragend", (e) => dragEnd(e, elementRef, rect.left, rect.top));
+        elementRef.current.removeEventListener("touchmove", (e) => dragTouch(e, elementRef));
+        elementRef.current.removeEventListener("touchend", endDrag);
+        elementRef.current.removeEventListener("touchcancel", endDrag);
+      });
+    };
+  }, []);
+
 
   return (
     <div className="desktopCont">
       {!deskApps.hide &&
         deskApps.apps.map((app, i) => {
           return (
-            // to allow it to be focusable (:focus)
-            <div key={i} className="dskApp" tabIndex={0}>
+            <div 
+              key={i}
+              tabIndex={0}
+              draggable={true}
+              ref={el => charsRef.current[i] = { current: el }}
+              className={`dskApp  ${draggingIndex === i ? 'is-dragging' : ''}`}
+              style={{ opacity: draggingIndex === i ? 0.25 : 1, transition: "none" }}
+            >
               <Icon
+                pr
+                menu="app"
+                src={app.icon}
                 click={app.action}
                 className="dskIcon prtclk"
-                src={app.icon}
                 payload={app.payload || "full"}
-                pr
                 width={Math.round(deskApps.size * 36)}
-                menu="app"
               />
               <div className="appName">{app.name}</div>
             </div>
@@ -116,7 +178,7 @@ export const SidePane = () => {
   const dispatch = useDispatch();
 
   let [btlevel, setBtLevel] = useState("");
-  const childToParent = () => {};
+  const childToParent = () => { };
 
   const clickDispatch = (event) => {
     var action = {

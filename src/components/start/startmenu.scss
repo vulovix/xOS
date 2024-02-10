@@ -14,9 +14,11 @@
   flex-direction: column;
   align-items: center;
   font-size: 0.75em;
-  transition: all ease-in-out 200ms;
   justify-content: center;
   border: 1px solid transparent;
+  position: relative;
+  top: 0;
+  left: 0;
 
   &:focus {
     background: rgba(255, 255, 255, 0.24);
@@ -32,6 +34,7 @@
     text-align: center;
     color: #fafafa;
     margin-top: 4px;
+    cursor: inherit;
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.6);
   }
 }
