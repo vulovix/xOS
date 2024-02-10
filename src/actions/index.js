@@ -51,6 +51,15 @@ export const deskHide = (payload, menu) => {
   store.dispatch({ type: "MENUCHNG", payload: tmpMenu });
 };
 
+export const toggleFullscreen = (payload, menu) => {
+  console.log(payload, menu);
+  var tmpMenu = { ...menu };
+  tmpMenu.menus.desk[0].opts[5].check ^= 1;
+
+  store.dispatch({ type: "TOGGLE_FULSCREEN" });
+  store.dispatch({ type: "MENUCHNG", payload: tmpMenu });
+};
+
 export const changeSort = (sort, menu) => {
   var tmpMenu = { ...menu };
   tmpMenu.menus.desk[1].opts[0].dot = false;

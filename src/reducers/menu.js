@@ -51,6 +51,11 @@ const defState = {
             action: "deskHide",
             check: true,
           },
+          {
+            name: "Fullscreen mode",
+            action: "toggleFullscreen",
+            check: false,
+          },
         ],
       },
       {
