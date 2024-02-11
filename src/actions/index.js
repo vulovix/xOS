@@ -293,6 +293,11 @@ export const preinstallApps = () => {
         appURL: "https://markdown.xos.dev",
         appIcon: "https://markdown.xos.dev/favicon.png",
       },
+      {
+        appName: "xOS Spreadsheet",
+        appURL: "https://spreadsheet.xos.dev",
+        appIcon: "https://spreadsheet.xos.dev/assets/favicon.png",
+      },
     ];
 
     const appsToPreinstall = preinstalledApps.map((app) => configureApp(app));
