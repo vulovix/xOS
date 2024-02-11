@@ -279,22 +279,27 @@ export const preinstallApps = () => {
     });
     const preinstalledApps = [
       {
-        appName: "xOS Code",
+        appName: "xCode",
         appURL: "https://code.xos.dev",
         appIcon: "https://code.xos.dev/favicon.png",
       },
       {
-        appName: "xOS Notepad",
+        appName: "xNotepad",
         appURL: "https://notepad.xos.dev",
         appIcon: "https://notepad.xos.dev/favicon.png",
       },
       {
-        appName: "xOS Markdown",
+        appName: "xMarkdown",
         appURL: "https://markdown.xos.dev",
         appIcon: "https://markdown.xos.dev/favicon.png",
       },
       {
-        appName: "xOS Spreadsheet",
+        appName: "xPaper",
+        appURL: "https://paper.xos.dev",
+        appIcon: "https://paper.xos.dev/favicon.png",
+      },
+      {
+        appName: "xSpreadsheet",
         appURL: "https://spreadsheet.xos.dev",
         appIcon: "https://spreadsheet.xos.dev/assets/favicon.png",
       },
