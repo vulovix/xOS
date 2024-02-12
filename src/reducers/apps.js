@@ -35,7 +35,7 @@ const appReducer = (state = defState, action) => {
       obj.url = null;
     }
 
-    obj.size = "full";
+    obj.size = "mini";
     obj.hide = false;
     obj.max = true;
     tmpState.hz += 1;
@@ -71,32 +71,39 @@ const appReducer = (state = defState, action) => {
     obj.z = tmpState.hz;
     tmpState["terminal"] = obj;
     return tmpState;
-  } else if (action.type === "TOGGLE_FULSCREEN"){
-    if (!document.fullscreenElement &&    // alternative standard method
-          !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {  // current working methods
-        if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-        } else if (document.documentElement.msRequestFullscreen) {
-          document.documentElement.msRequestFullscreen();
-        } else if (document.documentElement.mozRequestFullScreen) {
-          document.documentElement.mozRequestFullScreen();
-        } else if (document.documentElement.webkitRequestFullscreen) {
-          document.documentElement.webkitRequestFullscreen(Element.ALLOW_KEYBOARD_INPUT);
-        }
-      } else {
-        if (document.exitFullscreen) {
-          document.exitFullscreen();
-        } else if (document.msExitFullscreen) {
-          document.msExitFullscreen();
-        } else if (document.mozCancelFullScreen) {
-          document.mozCancelFullScreen();
-        } else if (document.webkitExitFullscreen) {
-          document.webkitExitFullscreen();
-        }
+  } else if (action.type === "TOGGLE_FULSCREEN") {
+    if (
+      !document.fullscreenElement && // alternative standard method
+      !document.mozFullScreenElement &&
+      !document.webkitFullscreenElement &&
+      !document.msFullscreenElement
+    ) {
+      // current working methods
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
+      } else if (document.documentElement.msRequestFullscreen) {
+        document.documentElement.msRequestFullscreen();
+      } else if (document.documentElement.mozRequestFullScreen) {
+        document.documentElement.mozRequestFullScreen();
+      } else if (document.documentElement.webkitRequestFullscreen) {
+        document.documentElement.webkitRequestFullscreen(
+          Element.ALLOW_KEYBOARD_INPUT
+        );
       }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+      } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+      } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+      }
+    }
   } else if (action.type == "ADDAPP") {
     tmpState[action.payload.icon] = action.payload;
-    tmpState[action.payload.icon].size = "full";
+    tmpState[action.payload.icon].size = "mini";
     tmpState[action.payload.icon].hide = true;
     tmpState[action.payload.icon].max = null;
     tmpState[action.payload.icon].z = 0;
@@ -113,7 +120,7 @@ const appReducer = (state = defState, action) => {
         tmpState = { ...state };
 
         if (action.payload == "full") {
-          obj.size = "full";
+          obj.size = "mini";
           obj.hide = false;
           obj.max = true;
           tmpState.hz += 1;
