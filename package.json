@@ -1,8 +1,8 @@
 {
-  "name": "win11react",
+  "name": "xOS",
   "description": "Win11 made in React",
-  "repository": "https://github.com/blueedgetechno/win11React",
-  "version": "0.1.1",
+  "repository": "https://github.com/vulovix/xOS",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@crowdin/cli": "^3.18.0",

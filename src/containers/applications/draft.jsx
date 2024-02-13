@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import { ToolBar } from "../../utils/general";
+import CommunicationProviderContext from "../../providers/Communication/context";
 
 export const IFrame = (props) => {
+  const { onIFrameLoad } = useContext(CommunicationProviderContext);
   const wnapp = useSelector((state) => state.apps[props.icon]);
   if (!wnapp) return null;
   var data = wnapp.data;
@@ -34,10 +36,12 @@ export const IFrame = (props) => {
         <div className="restWindow flex-grow flex flex-col">
           <div className="flex-grow overflow-hidden">
             <iframe
+              title="xOS App"
               src={data.url}
               allow="camera;microphone"
               className="w-full h-full"
               frameborder="0"
+              onLoad={onIFrameLoad}
             ></iframe>
           </div>
         </div>
