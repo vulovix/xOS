@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import i18next from "i18next";
-import login from "../../../components/login";
+import { login, logout } from "../../../components/auth";
+
 import { installApp, delApp } from "../../../actions";
 
 import { Icon, ToolBar } from "../../../utils/general";
@@ -273,6 +274,9 @@ export const WnTerminal = () => {
     } else if (type == "login") {
       login();
       tmpStack.push("started login");
+    } else if (type == "logout") {
+      logout();
+      tmpStack.push("started logout");
     } else if (type == "lang-test") {
       i18next.changeLanguage("fr-FR");
       tmpStack.push("French");

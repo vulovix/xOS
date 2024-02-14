@@ -14,6 +14,9 @@ const config = ({ mode }) => {
     define: {
       "process.env.NODE_ENV": `"${mode}"`,
     },
+    resolve: {
+      alias: [{ find: "~", replacement: "/src" }],
+    },
     build: {
       outDir: "build",
       rollupOptions: {
