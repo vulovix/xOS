@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import jsconfigPaths from "vite-jsconfig-paths";
 
 const config = ({ mode }) => {
   return defineConfig({
@@ -9,6 +10,7 @@ const config = ({ mode }) => {
       VitePWA({
         registerType: "autoUpdate",
       }),
+      jsconfigPaths(),
     ],
     base: "",
     define: {

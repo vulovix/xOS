@@ -2,7 +2,7 @@ import axios from "axios";
 import store from "~/reducers";
 import { dfApps } from "~/utils";
 import { gene_name } from "~/utils/apps";
-import apps from "../configuration/apps";
+import apps from "~/configuration/apps";
 
 export const dispatchAction = (event) => {
   const action = {
