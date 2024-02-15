@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "./i18nextConf";
 import "./index.css";
 
-import ActMenu from "./components/menu";
+import ActionMenu from "./components/menu";
 import {
   BandPane,
   CalnWid,
@@ -166,7 +166,7 @@ function App() {
             <CalnWid />
           </div>
           <Taskbar />
-          <ActMenu />
+          <ActionMenu />
         </div>
       </ErrorBoundary>
     </div>

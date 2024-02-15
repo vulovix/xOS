@@ -170,7 +170,7 @@ input {
   pointer-events: none !important;
 }
 
-.nopt {
+.no-option {
   pointer-events: none;
 }
 

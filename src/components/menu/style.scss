@@ -1,4 +1,4 @@
-.actmenu {
+.action-menu {
   --bg1: rgba(249, 249, 249, 0.9);
   --bg1a: rgba(248, 248, 248, 0.96);
   --bg2: rgba(0, 0, 0, 0.08);
@@ -18,23 +18,23 @@
     pointer-events: none;
   }
 
-  &[data-left="false"] .minimenu {
+  &[data-left="false"] .mini-menu {
     left: unset;
-    right: 98%;
+    right: 100%;
   }
 }
 
-body[data-theme="dark"] .actmenu {
+body[data-theme="dark"] .action-menu {
   --bg1: rgba(34, 36, 47, 0.8);
   --bg1a: rgba(30, 32, 47, 0.9);
   --bg2: rgba(255, 255, 255, 0.08);
 }
 
-.minimenu {
+.mini-menu {
   position: absolute;
   display: none;
-  top: 0;
-  left: 99%;
+  top: -6px;
+  left: 100%;
   background: var(--bg1a);
   z-index: 9999;
   padding: 4px 0;
@@ -44,7 +44,7 @@ body[data-theme="dark"] .actmenu {
   border-radius: 8px;
 }
 
-.menuopt {
+.menu-option {
   height: 28px;
   box-sizing: border-box;
   position: relative;
@@ -62,17 +62,17 @@ body[data-theme="dark"] .actmenu {
   &:hover {
     background: var(--bg2);
 
-    .minimenu {
+    .mini-menu {
       display: block;
     }
   }
 
-  .spcont {
+  .option-icon {
     width: 16px;
     margin-right: 12px;
   }
 
-  .micon {
+  .marker-icon {
     position: absolute;
   }
 

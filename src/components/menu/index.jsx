@@ -1,55 +1,56 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Icon } from "../../utils/general";
-import "./menu.scss";
+import { Icon } from "~/utils/general";
+import * as actions from "~/actions";
+import "./style.scss";
 
-import * as Actions from "../../actions";
-
-export const ActMenu = () => {
+export const ActionMenu = () => {
   const menu = useSelector((state) => state.menus);
-  const menudata = menu.data[menu.opts];
-  const { abpos, isLeft } = useSelector((state) => {
-    var acount = state.menus.menus[state.menus.opts].length;
-    var tmpos = {
-        top: state.menus.top,
-        left: state.menus.left,
-      },
-      tmpleft = false;
 
-    var wnwidth = window.innerWidth,
-      wnheight = window.innerHeight;
+  const menuOptions = menu.data[menu.opts];
 
-    var ewidth = 312,
-      eheight = acount * 28;
+  const { position, isLeft } = useSelector((state) => {
+    const numberOfOptions = state.menus.menus[state.menus.opts].length;
+    const position = {
+      top: state.menus.top,
+      left: state.menus.left,
+    };
+    let isLeft = false;
 
-    tmpleft = wnwidth - tmpos.left > 504;
-    if (wnwidth - tmpos.left < ewidth) {
-      tmpos.left = wnwidth - ewidth;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+
+    const width = 312;
+    const height = numberOfOptions * 28;
+
+    isLeft = windowWidth - position.left > 504;
+    if (windowWidth - position.left < width) {
+      position.left = windowWidth - width;
     }
 
-    if (wnheight - tmpos.top < eheight) {
-      tmpos.bottom = wnheight - tmpos.top;
-      tmpos.top = null;
+    if (windowHeight - position.top < height) {
+      position.bottom = windowHeight - position.top;
+      position.top = null;
     }
 
     return {
-      abpos: tmpos,
-      isLeft: tmpleft,
+      position,
+      isLeft,
     };
   });
 
   const dispatch = useDispatch();
 
-  const clickDispatch = (event) => {
+  const onOptionSelect = (event) => {
     event.stopPropagation();
-    var action = {
+    const action = {
       type: event.target.dataset.action,
       payload: event.target.dataset.payload,
     };
 
     if (action.type) {
-      if (action.type != action.type.toUpperCase()) {
-        Actions[action.type](action.payload, menu);
+      if (action.type !== action.type.toUpperCase()) {
+        actions[action.type](action.payload, menu);
       } else {
         dispatch(action);
       }
@@ -57,38 +58,38 @@ export const ActMenu = () => {
     }
   };
 
-  const menuobj = (data) => {
-    var mnode = [];
-    data.map((opt, i) => {
-      if (opt.type == "hr") {
-        mnode.push(<div key={i} className="menuhr"></div>);
+  const renderMenu = (data) => {
+    var nodes = [];
+    data.forEach((opt, i) => {
+      if (opt.type === "hr") {
+        nodes.push(<div key={i} className="menuhr"></div>);
       } else {
-        mnode.push(
+        nodes.push(
           <div
             key={i}
-            className="menuopt"
             data-dsb={opt.dsb}
-            onClick={clickDispatch}
+            className="menu-option"
+            onClick={onOptionSelect}
             data-action={opt.action}
             data-payload={opt.payload}
           >
-            {menudata.ispace != false ? (
-              <div className="spcont">
-                {opt.icon && opt.type == "svg" ? (
+            {menuOptions.ispace !== false ? (
+              <div className="option-icon">
+                {opt.icon && opt.type === "svg" ? (
                   <Icon icon={opt.icon} width={16} />
                 ) : null}
-                {opt.icon && opt.type == "fa" ? (
+                {opt.icon && opt.type === "fa" ? (
                   <Icon fafa={opt.icon} width={16} />
                 ) : null}
-                {opt.icon && opt.type == null ? (
+                {opt.icon && opt.type === null ? (
                   <Icon src={opt.icon} width={16} />
                 ) : null}
               </div>
             ) : null}
-            <div className="nopt">{opt.name}</div>
+            <div className="no-option">{opt.name}</div>
             {opt.opts ? (
               <Icon
-                className="micon rightIcon"
+                className="marker-icon rightIcon"
                 fafa="faChevronRight"
                 width={10}
                 color="#999"
@@ -96,7 +97,7 @@ export const ActMenu = () => {
             ) : null}
             {opt.dot ? (
               <Icon
-                className="micon dotIcon"
+                className="marker-icon dotIcon"
                 fafa="faCircle"
                 width={4}
                 height={4}
@@ -104,7 +105,7 @@ export const ActMenu = () => {
             ) : null}
             {opt.check ? (
               <Icon
-                className="micon checkIcon"
+                className="marker-icon checkIcon"
                 fafa="faCheck"
                 width={8}
                 height={8}
@@ -112,37 +113,37 @@ export const ActMenu = () => {
             ) : null}
             {opt.opts ? (
               <div
-                className="minimenu"
+                className="mini-menu"
                 style={{
-                  minWidth: menudata.secwid,
+                  minWidth: menuOptions.secwid,
                 }}
               >
-                {menuobj(opt.opts)}
+                {renderMenu(opt.opts)}
               </div>
             ) : null}
-          </div>,
+          </div>
         );
       }
     });
 
-    return mnode;
+    return nodes;
   };
 
   return (
     <div
-      className="actmenu"
-      id="actmenu"
+      id="action-menu"
+      className="action-menu"
       style={{
-        ...abpos,
+        ...position,
         "--prefix": "MENU",
-        width: menudata.width,
+        width: menuOptions.width,
       }}
-      data-hide={menu.hide}
       data-left={isLeft}
+      data-hide={menu.hide}
     >
-      {menuobj(menu.menus[menu.opts])}
+      {renderMenu(menu.menus[menu.opts])}
     </div>
   );
 };
 
-export default ActMenu;
+export default ActionMenu;
