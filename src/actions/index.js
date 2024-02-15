@@ -2,6 +2,7 @@ import axios from "axios";
 import store from "~/reducers";
 import { dfApps } from "~/utils";
 import { gene_name } from "~/utils/apps";
+import apps from "../configuration/apps";
 
 export const dispatchAction = (event) => {
   const action = {
@@ -170,6 +171,7 @@ export const installApp = (data) => {
   app.action = gene_name();
   store.dispatch({ type: "ADDAPP", payload: app });
   store.dispatch({ type: "DESKADD", payload: app });
+  console.log("New app installed: ", app.name);
   // store.dispatch({ type: "WNSTORE", payload: "mnmz" });
 };
 
@@ -264,60 +266,82 @@ export const loadSettings = () => {
 };
 
 export const preinstallApps = () => {
-  const installed = localStorage.getItem("installed");
-  if (installed === null) {
-    const configureApp = ({ appName, appURL, appIcon }) => ({
-      type: "app",
-      icon: appIcon,
-      name: appName,
-      data: {
-        pwa: true,
-        url: appURL,
-        invert: false,
-        type: "IFrame",
-      },
-    });
-    const preinstalledApps = [
-      {
-        appName: "xMusic",
-        appURL: "https://music.xos.dev",
-        appIcon: "https://music.xos.dev/favicon.png",
-      },
-      {
-        appName: "xFiles",
-        appURL: "https://files.xos.dev",
-        appIcon: "https://files.xos.dev/favicon.png",
-      },
-      {
-        appName: "xCode",
-        appURL: "https://code.xos.dev",
-        appIcon: "https://code.xos.dev/favicon.png",
-      },
-      {
-        appName: "xNotepad",
-        appURL: "https://notepad.xos.dev",
-        appIcon: "https://notepad.xos.dev/favicon.png",
-      },
-      {
-        appName: "xMarkdown",
-        appURL: "https://markdown.xos.dev",
-        appIcon: "https://markdown.xos.dev/favicon.png",
-      },
-      {
-        appName: "xPaper",
-        appURL: "https://paper.xos.dev",
-        appIcon: "https://paper.xos.dev/favicon.png",
-      },
-      {
-        appName: "xSpreadsheet",
-        appURL: "https://spreadsheet.xos.dev",
-        appIcon: "https://spreadsheet.xos.dev/assets/favicon.png",
-      },
-    ];
+  const installed = JSON.parse(localStorage.getItem("installed") || "[]");
 
-    const appsToPreinstall = preinstalledApps.map((app) => configureApp(app));
-    appsToPreinstall.forEach(installApp);
+  const preinstalled = JSON.parse(
+    localStorage.getItem("xOS_preinstalled_apps") || "[]"
+  );
+
+  const configureApp = ({ appName, appURL, appIcon }) => ({
+    type: "app",
+    icon: appIcon,
+    name: appName,
+    data: {
+      pwa: true,
+      url: appURL,
+      invert: false,
+      type: "IFrame",
+    },
+  });
+
+  const appsToInstall = [];
+  const availableToInstall = [];
+
+  apps.forEach((config) => {
+    const candidate = configureApp(config);
+    if (!installed.find((i) => i.name === candidate.name)) {
+      // if it is not ever been preinstalled
+      const preinstalledApp = preinstalled.find(
+        (p) => p.name === candidate.name
+      );
+      if (!preinstalledApp) {
+        appsToInstall.push(candidate);
+      } else {
+        availableToInstall.push(candidate);
+      }
+    }
+  });
+
+  if (appsToInstall.length) {
+    console.log(
+      "New apps available for installation: ",
+      appsToInstall.map((x) => x.name).join(", "),
+      "."
+    );
+
+    appsToInstall.forEach(installApp);
+
+    localStorage.setItem(
+      "xOS_preinstalled_apps",
+      JSON.stringify([...preinstalled, ...appsToInstall])
+    );
+  } else {
+    console.log("No new apps for installation.");
+    if (availableToInstall.length) {
+      console.log(
+        "Available apps you can install: ",
+        availableToInstall.map((x) => x.name).join(", "),
+        "."
+      );
+    }
   }
+
+  // if (installed === null) {
+  //   const configureApp = ({ appName, appURL, appIcon }) => ({
+  //     type: "app",
+  //     icon: appIcon,
+  //     name: appName,
+  //     data: {
+  //       pwa: true,
+  //       url: appURL,
+  //       invert: false,
+  //       type: "IFrame",
+  //     },
+  //   });
+
+  //   const appsToPreinstall = preinstalledApps.map((app) => configureApp(app));
+  //   appsToPreinstall.forEach(installApp);
+  // }
 };
 
 // mostly file explorer
