@@ -52,7 +52,7 @@ export const DesktopApp = () => {
     const preventDefault = (e) => {
       e.dataTransfer.dropEffect = "move";
       e.preventDefault();
-    }
+    };
     document.addEventListener("dragover", preventDefault);
 
     const startDrag = (index) => {
@@ -64,9 +64,9 @@ export const DesktopApp = () => {
     };
 
     const dragEnd = (e, elementRef, left, top) => {
-      elementRef.current.style.opacity = '1'; 
-      elementRef.current.style.left = `${e.clientX - left - (elementRef.current.offsetWidth / 2)}px`;
-      elementRef.current.style.top = `${e.clientY - top - (elementRef.current.offsetHeight / 2)}px`;
+      elementRef.current.style.opacity = "1";
+      elementRef.current.style.left = `${e.clientX - left - elementRef.current.offsetWidth / 2}px`;
+      elementRef.current.style.top = `${e.clientY - top - elementRef.current.offsetHeight / 2}px`;
       endDrag();
     };
 
@@ -81,8 +81,12 @@ export const DesktopApp = () => {
     charsRef.current.forEach((elementRef, index) => {
       const rect = elementRef.current.getBoundingClientRect();
       elementRef.current.addEventListener("dragstart", () => startDrag(index));
-      elementRef.current.addEventListener("dragend", (e) => dragEnd(e, elementRef, rect.left, rect.top));
-      elementRef.current.addEventListener("touchmove", (e) => dragTouch(e, elementRef));
+      elementRef.current.addEventListener("dragend", (e) =>
+        dragEnd(e, elementRef, rect.left, rect.top)
+      );
+      elementRef.current.addEventListener("touchmove", (e) =>
+        dragTouch(e, elementRef)
+      );
       elementRef.current.addEventListener("touchend", endDrag);
       elementRef.current.addEventListener("touchcancel", endDrag);
     });
@@ -92,28 +96,36 @@ export const DesktopApp = () => {
       charsRef.current.forEach((elementRef, index) => {
         const rect = elementRef.current.getBoundingClientRect();
 
-        elementRef.current.removeEventListener("dragstart", () => startDrag(index));
-        elementRef.current.removeEventListener("dragend", (e) => dragEnd(e, elementRef, rect.left, rect.top));
-        elementRef.current.removeEventListener("touchmove", (e) => dragTouch(e, elementRef));
+        elementRef.current.removeEventListener("dragstart", () =>
+          startDrag(index)
+        );
+        elementRef.current.removeEventListener("dragend", (e) =>
+          dragEnd(e, elementRef, rect.left, rect.top)
+        );
+        elementRef.current.removeEventListener("touchmove", (e) =>
+          dragTouch(e, elementRef)
+        );
         elementRef.current.removeEventListener("touchend", endDrag);
         elementRef.current.removeEventListener("touchcancel", endDrag);
       });
     };
   }, []);
 
-
   return (
     <div className="desktopCont">
       {!deskApps.hide &&
         deskApps.apps.map((app, i) => {
           return (
-            <div 
+            <div
               key={i}
               tabIndex={0}
               draggable={true}
-              ref={el => charsRef.current[i] = { current: el }}
-              className={`dskApp  ${draggingIndex === i ? 'is-dragging' : ''}`}
-              style={{ opacity: draggingIndex === i ? 0.25 : 1, transition: "none" }}
+              ref={(el) => (charsRef.current[i] = { current: el })}
+              className={`dskApp  ${draggingIndex === i ? "is-dragging" : ""}`}
+              style={{
+                opacity: draggingIndex === i ? 0.25 : 1,
+                transition: "none",
+              }}
             >
               <Icon
                 pr
@@ -153,14 +165,6 @@ export const BandPane = () => {
         <Icon
           className="hvlight"
           width={17}
-          click="SPOTIFY"
-          payload="togg"
-          open="true"
-          src="spotify"
-        />
-        <Icon
-          className="hvlight"
-          width={17}
           click="NOTEPAD"
           payload="togg"
           src="notepad"
@@ -178,7 +182,7 @@ export const SidePane = () => {
   const dispatch = useDispatch();
 
   let [btlevel, setBtLevel] = useState("");
-  const childToParent = () => { };
+  const childToParent = () => {};
 
   const clickDispatch = (event) => {
     var action = {
@@ -212,7 +216,7 @@ export const SidePane = () => {
   function sliderBackground(elem, e) {
     elem.style.setProperty(
       "--track-color",
-      `linear-gradient(90deg, var(--clrPrm) ${e - 3}%, #888888 ${e}%)`,
+      `linear-gradient(90deg, var(--clrPrm) ${e - 3}%, #888888 ${e}%)`
     );
   }
 

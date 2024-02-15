@@ -1,13 +1,6 @@
 // www.OnlineWebFonts.Com
 
 @font-face {
-  font-family: "Spotify";
-  src:
-    url("./apps/assets/spotify.woff2") format("woff2"),
-    url("./apps/assets/spotify.ttf") format("truetype");
-}
-
-@font-face {
   font-family: SettingsIcons;
   src: url("./apps/assets/SettingsIcons.woff2") format("woff2");
 }
@@ -141,14 +134,6 @@ body[data-theme="dark"] .calcApp {
 
 .whiteBoard {
   background: var(--comp-txt);
-}
-
-.spotify {
-  background: rgb(24, 24, 24);
-}
-
-.discordWn {
-  background: #36393f;
 }
 
 .lightWindow {

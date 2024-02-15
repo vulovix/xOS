@@ -206,12 +206,6 @@ const apps = [
     type: "app",
   },
   {
-    name: "Spotify",
-    icon: "spotify",
-    type: "app",
-    action: "SPOTIFY",
-  },
-  {
     name: "Sharepoint",
     icon: "share",
     type: "app",
@@ -294,19 +288,6 @@ const apps = [
   //   payload: "https://mindhub.dev",
   //   action: "EXTERNAL",
   // },
-  // {
-  //   name: "Unescape",
-  //   icon: "unescape",
-  //   type: "action",
-  //   action: "EXTERNAL",
-  //   payload: "https://blueedge.me/unescape",
-  // },
-  {
-    name: "Discord",
-    icon: "discord",
-    type: "app",
-    action: "DISCORD",
-  },
 ];
 
 for (let i = 0; i < installed.length; i++) {

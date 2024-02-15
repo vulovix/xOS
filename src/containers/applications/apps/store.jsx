@@ -477,22 +477,7 @@ const FrontPage = (props) => {
         <div className="storeRibbon">
           {ribbon &&
             ribbon.map((x, i) => {
-              return x == "unescape" ? (
-                <a
-                  key={i}
-                  href="https://blueedge.me/unescape"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image
-                    className="mx-1 dpShad rounded"
-                    var={x}
-                    h={100}
-                    dir="store/float"
-                    src={x}
-                  />
-                </a>
-              ) : (
+              return (
                 <Image
                   key={i}
                   className="mx-1 dpShad rounded"
