@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as Actions from "../../actions";
-import { getTreeValue } from "../../actions";
-import { Icon } from "../../utils/general";
-import Battery from "../shared/Battery";
+import * as actions from "~/actions";
+import { Icon } from "~/utils/general";
+import Battery from "~/components/shared/Battery";
 import "./searchpane.scss";
 import "./sidepane.scss";
 import "./startmenu.scss";
 
 export * from "./start";
 export * from "./widget";
+
+const { getTreeValue } = actions;
 
 export const DesktopApp = () => {
   const deskApps = useSelector((state) => {
@@ -192,7 +193,7 @@ export const SidePane = () => {
 
     if (action.type) {
       if (action.type != action.type.toUpperCase()) {
-        Actions[action.type](action.payload);
+        actions[action.type](action.payload);
       } else dispatch(action);
     }
     // For battery saver
@@ -336,11 +337,11 @@ export const CalnWid = () => {
   const sidepane = useSelector((state) => state.sidepane);
   const [loaded, setLoad] = useState(false);
 
-  const [collapse, setCollapse] = useState("");
+  // const [collapse, setCollapse] = useState("");
 
-  const collapseToggler = () => {
-    collapse === "" ? setCollapse("collapse") : setCollapse("");
-  };
+  // const collapseToggler = () => {
+  //   collapse === "" ? setCollapse("collapse") : setCollapse("");
+  // };
 
   useEffect(() => {
     if (!loaded) {
@@ -354,11 +355,12 @@ export const CalnWid = () => {
         highlighttoday: true,
       });
     }
-  });
+  }, []);
 
   return (
     <div
-      className={`calnpane ${collapse} dpShad`}
+      // className={`calnpane ${collapse} dpShad`}
+      className={`calnpane dpShad`}
       data-hide={sidepane.calhide}
       style={{ "--prefix": "CALN" }}
     >
@@ -370,13 +372,13 @@ export const CalnWid = () => {
             day: "numeric",
           })}
         </div>
-        <div className="collapser p-2 m-4 rounded" onClick={collapseToggler}>
+        {/* <div className="collapser p-2 m-4 rounded" onClick={collapseToggler}>
           {collapse === "" ? (
             <Icon fafa="faChevronDown" />
           ) : (
             <Icon fafa="faChevronUp" />
           )}
-        </div>
+        </div> */}
       </div>
       <div id="dycalendar"></div>
     </div>
