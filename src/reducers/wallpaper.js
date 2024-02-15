@@ -39,8 +39,9 @@ const defState = {
   themes: themes,
   wps: wps,
   src: walls[wps],
-  locked: !(locked == "false"),
-  booted: false || import.meta.env.MODE == "development",
+  locked: !(locked === "false"),
+  booted: false || import.meta.env.MODE === "development",
+  update: false,
   act: "",
   dir: 0,
 };
@@ -55,7 +56,7 @@ const wallReducer = (state = defState, action) => {
         dir: 0,
       };
     case "WALLNEXT":
-      var twps = (state.wps + 1) % walls.length;
+      var twps = ((state.wps || 0) + 1) % walls.length;
       localStorage.setItem("wps", twps);
       return {
         ...state,
@@ -82,6 +83,24 @@ const wallReducer = (state = defState, action) => {
         dir: -1,
         locked: true,
         act: "restart",
+      };
+    case "WALLUPDATE":
+      return {
+        ...state,
+        booted: true,
+        dir: -1,
+        locked: true,
+        update: true,
+        act: "",
+      };
+    case "WALLUPDATED":
+      return {
+        ...state,
+        booted: true,
+        dir: 0,
+        locked: true,
+        update: false,
+        act: "",
       };
     case "WALLSHUTDN":
       return {

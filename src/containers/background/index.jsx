@@ -50,16 +50,9 @@ export const BootScreen = (props) => {
   return (
     <div className="bootscreen">
       <div className={blackout ? "hidden" : ""}>
-        <Image src="asset/bootlogo" w={180} />
+        <Image src="asset/logo" w={180} />
         <div className="mt-48" id="loader">
-          <svg
-            className="progressRing"
-            height={48}
-            width={48}
-            viewBox="0 0 16 16"
-          >
-            <circle cx="8px" cy="8px" r="7px"></circle>
-          </svg>
+          <Loader />
         </div>
       </div>
     </div>
@@ -113,6 +106,7 @@ export const LockScreen = (props) => {
       className={"lockscreen " + (props.dir == -1 ? "slowfadein" : "")}
       data-unlock={unlocked}
       style={{
+        backgroundPosition: "center",
         backgroundImage: `url(${`img/wallpaper/lock.jpg`})`,
       }}
       onClick={action}
@@ -136,15 +130,13 @@ export const LockScreen = (props) => {
         </div>
       </div>
       <div className="fadeinScreen" data-faded={!lock} data-unlock={unlocked}>
-        <Image
+        <img
           className="rounded-full overflow-hidden"
           src="img/asset/prof.png"
-          w={200}
-          ext
+          alt="Profile"
+          width={140}
         />
-        <div className="mt-2 text-2xl font-medium text-gray-200">
-          {userName}
-        </div>
+        <div className="mt-6 text-3xl font-bold text-gray-100">{userName}</div>
         <div className="flex items-center mt-6 signInBtn" onClick={proceed}>
           Sign in
         </div>
@@ -174,3 +166,74 @@ export const LockScreen = (props) => {
     </div>
   );
 };
+
+export const UpdateScreen = (props) => {
+  const dispatch = useDispatch();
+  let percentage = 0;
+  let currentTime;
+  let time = 500000; // 6000;
+  let refresh = 1000;
+
+  useEffect(() => {
+    currentTime = time;
+    startLoading();
+  }, []);
+
+  const [percent, setPercent] = useState(0);
+
+  const startLoading = () => {
+    currentTime = currentTime - refresh;
+    percentage = ((time - currentTime) * 100) / time;
+    setPercent(parseInt(percentage));
+    let t;
+    if (currentTime !== 0) {
+      t = setTimeout(startLoading, refresh);
+    } else {
+      clearTimeout(t);
+      dispatch({ type: "WALLUPDATED" });
+      console.log("done update");
+    }
+  };
+
+  return (
+    <div className={`update-screen ${props.dir === -1 ? "slowfadein" : ""}`}>
+      <div class="update">
+        <div class="update__content_wrapper">
+          <div className="bumper" />
+          <div className="update__content">
+            <Loader />
+
+            <div class="update__text header">
+              <p id="update__percentage">You're {percent}% there.</p>
+              <p>Please keep your computer on.</p>
+            </div>
+          </div>
+
+          <div class="update__text footer">
+            <p>Your computer might restart few times.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Loader = () => (
+  <div class="update__loader">
+    <div class="update__spinner">
+      <div class="spinner__point"></div>
+    </div>
+    <div class="update__spinner update__spinner--second">
+      <div class="spinner__point"></div>
+    </div>
+    <div class="update__spinner update__spinner--third">
+      <div class="spinner__point"></div>
+    </div>
+    <div class="update__spinner update__spinner--four">
+      <div class="spinner__point"></div>
+    </div>
+    <div class="update__spinner update__spinner--five">
+      <div class="spinner__point"></div>
+    </div>
+  </div>
+);

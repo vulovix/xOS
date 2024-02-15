@@ -8,13 +8,7 @@ import CommunicationProvider from "./providers/Communication";
 const root = createRoot(document.getElementById("root"));
 
 root.render(
-  <Suspense
-    fallback={
-      <div id="sus-fallback">
-        <h1>Loading</h1>
-      </div>
-    }
-  >
+  <Suspense fallback={<div id="sus-fallback"></div>}>
     <Provider store={store}>
       <CommunicationProvider>
         <App />

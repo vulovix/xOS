@@ -155,27 +155,113 @@
 }
 // https://docs.microsoft.com/en-us/fluent-ui/web-components/components/progress-ring
 
-.progressRing circle {
-  stroke: white;
-  fill: none;
-  stroke-width: 2px;
-  stroke-linecap: round;
-  transform-origin: 50% 50%;
-  transition: all 0.2s ease-in-out 0s;
-  animation: 2s linear 0s infinite normal none running spin-infinite;
+.update-screen {
+position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  z-index: 2;
+
+  .update {
+    background-color: #000000;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .update__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .update__content_wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: space-between;
+    .bumper {
+      margin-bottom: auto;
+    }
+  }
+
+  .update__spinner {
+    text-align: center;
+    margin: 20px;
+  }
+
+  .update__text {
+    text-align: center;
+    color: #fbfdfd;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 30px;
+    &.header {
+      margin-bottom: auto;
+    }
+    &.footer {
+      margin-top: auto;
+    }
+  }
+
+  
 }
 
-@keyframes spin-infinite {
-  0% {
-    stroke-dasharray: 0.01px, 43.97px;
-    transform: rotate(0deg);
+.update__loader {
+  height: 50px;
+  width: 50px;
+  margin: 20px;
+
+  .update__spinner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50px;
+    position: absolute;
+    margin: 0;
+    animation-name: rotate;
+    animation-duration: 1.4s;
+    animation-timing-function: cubic-bezier(0.05, 0.57, 0.63, 0.38);
+    animation-delay: 0s;
+    animation-iteration-count: infinite;
   }
-  50% {
-    stroke-dasharray: 21.99px, 21.99px;
-    transform: rotate(450deg);
+
+  .update__spinner--second {
+    animation-delay: 0.2s;
   }
-  100% {
-    stroke-dasharray: 0.01px, 43.97px;
-    transform: rotate(1080deg);
+
+  .update__spinner--third {
+    animation-delay: 0.4s;
+  }
+
+  .update__spinner--four {
+    animation-delay: 0.6s;
+  }
+
+  .update__spinner--five {
+    animation-delay: 0.8s;
+  }
+
+  .update__spinner--six {
+    animation-delay: 1s;
+  }
+
+  .spinner__point {
+    width: 7px;
+    height: 7px;
+    border-radius: 10px;
+    background-color: white;
+  }
+
+  @keyframes rotate {
+    0% {
+      transform: rotate(0.7turn);
+    }
+
+    100% {
+      transform: rotate(1.7turn);
+    }
   }
 }

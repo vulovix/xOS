@@ -241,7 +241,6 @@ a {
 
 #textpad {
   font-family: Consolas, monospace;
-  /* font-size: 18px; */
   font-weight: 500;
 }
 
@@ -263,7 +262,7 @@ a {
 #sus-fallback {
   width: 100%;
   position: relative;
-  height: 100%;
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;

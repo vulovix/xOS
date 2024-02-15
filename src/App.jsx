@@ -14,7 +14,12 @@ import {
   WidPane,
 } from "./components/start";
 import Taskbar from "./components/taskbar";
-import { Background, BootScreen, LockScreen } from "./containers/background";
+import {
+  Background,
+  BootScreen,
+  LockScreen,
+  UpdateScreen,
+} from "./containers/background";
 
 import { loadSettings, preinstallApps } from "./actions";
 import * as Applications from "./containers/applications";
@@ -138,6 +143,7 @@ function App() {
   return (
     <div className="App">
       <ErrorBoundary FallbackComponent={ErrorFallback}>
+        {wall.update ? <UpdateScreen dir={wall.dir} /> : null}
         {!wall.booted ? <BootScreen dir={wall.dir} /> : null}
         {wall.locked ? <LockScreen dir={wall.dir} /> : null}
         <div className="appwrap">
