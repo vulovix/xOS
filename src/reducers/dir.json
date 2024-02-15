@@ -74,9 +74,9 @@
               "Public Videos": {}
             }
           },
-          "Blue": {
+          "This PC": {
             "type": "folder",
-            "name": "Blue",
+            "name": "This PC",
             "info": {
               "spid": "%user%",
               "icon": "user"
@@ -165,7 +165,7 @@
                   "icon": "vid"
                 },
                 "data": {
-                  "porn-collection": {}
+                  "collection": {}
                 }
               },
               "Github": {
@@ -177,8 +177,6 @@
                   "blueapi": {},
                   "BlueBlog": {},
                   "BlueBlogs---A-social-platform": {},
-                  "blueedgetechno": {},
-                  "blueedgetechno.github.io": {},
                   "blueimage": {},
                   "bluelab": {},
                   "blueothello": {},

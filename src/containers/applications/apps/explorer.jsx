@@ -342,7 +342,7 @@ const NavPane = ({}) => {
             notoggle
             pinned
           />
-          <Dropdown icon="user" title="Blue" spid="%user%" notoggle pinned />
+          <Dropdown icon="user" title="This PC" spid="%user%" notoggle pinned />
           <Dropdown
             icon="docs"
             title="Documents"

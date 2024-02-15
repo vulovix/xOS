@@ -1,19 +1,14 @@
 {
   "name": "xOS",
-  "description": "Win11 made in React",
+  "description": "Operating System made in React",
   "repository": "https://github.com/vulovix/xOS",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@crowdin/cli": "^3.18.0",
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@sentry/react": "^7.100.1",
-    "@sentry/tracing": "^7.100.1",
-    "@tauri-apps/api": "^1.5.3",
-    "@widgetbot/react-embed": "^1.9.0",
     "@win11react/react-canvas-draw": "^1.2.2",
     "axios": "^1.6.7",
     "eslint-config-react-app": "^7.0.1",
@@ -29,9 +24,7 @@
     "react-firebase-hooks": "^5.1.1",
     "react-i18next": "^14.0.5",
     "react-lazy-load-image-component": "^1.6.0",
-    "react-player": "^2.14.1",
     "react-redux": "^9.1.0",
-    "react-scripts": "^5.0.1",
     "redux": "^5.0.1",
     "sass": "^1.70.0",
     "translation-check": "^1.1.0"
@@ -40,10 +33,7 @@
     "start": "vite",
     "build": "vite build",
     "ghbuild": "CI=false vite build",
-    "prettier": "prettier --write .",
-    "turbuild": "react-scripts build",
-    "tauri": "tauri",
-    "crowdin": "crowdin"
+    "prettier": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [
@@ -64,7 +54,6 @@
     ]
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^1.5.9",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",

@@ -46,13 +46,13 @@ const apps = [
     type: "app",
     action: "MSEDGE",
   },
-  // {
-  //   name: "Buy me a coffee",
-  //   icon: "buyme",
-  //   type: "app",
-  //   action: "EXTERNAL",
-  //   payload: "https://www.buymeacoffee.com/blueedgetechno",
-  // },
+  {
+    name: "Buy me a coffee",
+    icon: "buyme",
+    type: "app",
+    action: "EXTERNAL",
+    payload: "https://www.buymeacoffee.com/vulovix",
+  },
   {
     name: "Store",
     icon: "store",
@@ -65,7 +65,7 @@ const apps = [
     type: "app",
   },
   {
-    name: "Blue",
+    name: "This PC",
     icon: "win/user",
     type: "app",
     action: "EXPLORER",
@@ -193,13 +193,6 @@ const apps = [
     icon: "photos",
     type: "app",
   },
-  // {
-  //   name: "Pinterest",
-  //   icon: "pinterest",
-  //   type: "app",
-  //   payload: "https://www.pinterest.com/blueedgetechno/",
-  //   action: "EXTERNAL",
-  // },
   {
     name: "Security",
     icon: "security",

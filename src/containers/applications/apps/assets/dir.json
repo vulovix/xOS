@@ -125,7 +125,7 @@
   "Users": {
     "Default": {},
     "Public": {},
-    "Blue": {
+    "This PC": {
       "AppData": {},
       "config.cfg": {},
       "Contacts": {},
@@ -155,7 +155,7 @@
       "Searches": {},
       "StartMenu": {},
       "supersecret.txt": {
-        "content": "github: github.com/blueedgetechno\nwebsite: blueedge.me"
+        "content": "github: github.com/vulovix/xOS\nwebsite: xos.dev"
       },
       "Templates": {},
       "VirtualBoxVMs": {},

@@ -119,17 +119,6 @@ export const WnTerminal = () => {
         delApp("delete", Mainmenu);
         tmpStack.push("App uninstalled");
       }
-    } else if (type == "python") {
-      if (arg.length) {
-        if (window.pythonRunner) {
-          var content = await window.pythonRunner.runCode(arg);
-          if (window.pythonResult) {
-            window.pythonResult.split("\n").forEach((x) => {
-              if (x.trim().length) tmpStack.push(x);
-            });
-          }
-        }
-      }
     } else if (type == "cd") {
       if (arg.length) {
         var errp = true;
@@ -269,8 +258,6 @@ export const WnTerminal = () => {
       dispatch({ type: wnapp.action, payload: "close" });
     } else if (type == "title") {
       setWntitle(arg.length ? arg : "Terminal");
-    } else if (type == "hostname") {
-      tmpStack.push("blue");
     } else if (type == "login") {
       login();
       tmpStack.push("started login");
@@ -280,10 +267,6 @@ export const WnTerminal = () => {
     } else if (type == "lang-test") {
       i18next.changeLanguage("fr-FR");
       tmpStack.push("French");
-    } else if (type == "blue") {
-      tmpStack.push("blueedgetechno");
-    } else if (type == "dev") {
-      tmpStack.push("https://dev.blueedge.me/");
     } else if (type == "ver") {
       tmpStack.push("OS [Version 10.0.22000.51]");
     } else if (type == "systeminfo") {
@@ -318,7 +301,6 @@ export const WnTerminal = () => {
         "TITLE          Sets the window title for a CMD.EXE session.",
         "TYPE           Displays the contents of a text file.",
         "VER            Displays the Windows version.",
-        "PYTHON         EXECUTE PYTHON CODE.",
         "EVAL           RUNS JavaScript statements.",
         "INSTALL        Instal an app with app name, iFrame URL and icon URL",
         "UNINSTALL      Uninstal an app with app name",

@@ -1,16 +1,16 @@
 {
-  "short_name": "Win11",
-  "name": "Win11 in React",
+  "short_name": "xOS",
+  "name": "xOS",
   "icons": [
     {
       "src": "favicon.ico",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/png"
     },
     {
       "src": "favicon.png",
       "type": "image/png",
-      "sizes": "174x174"
+      "sizes": "192x192"
     }
   ],
   "start_url": ".",
