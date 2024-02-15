@@ -279,6 +279,11 @@ export const preinstallApps = () => {
     });
     const preinstalledApps = [
       {
+        appName: "xMusic",
+        appURL: "https://music.xos.dev",
+        appIcon: "https://music.xos.dev/favicon.png",
+      },
+      {
         appName: "xFiles",
         appURL: "https://files.xos.dev",
         appIcon: "https://files.xos.dev/favicon.png",
