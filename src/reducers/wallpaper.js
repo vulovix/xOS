@@ -8,6 +8,9 @@ const walls = [
   "Windows/img3.jpg",
   "Windows/img4.jpg",
   "Windows/img5.jpg",
+  "Windows/img6.jpg",
+  "Windows/img7.jpg",
+  "Windows/img8.jpg",
 
   "Mac/img0.jpg",
   "Mac/img1.jpg",
