@@ -235,25 +235,55 @@ export const BackupScreen = (props) => {
 
   const desktop = useSelector((state) => state.desktop);
 
-  const appsToSync = {
+  const appsToBackup = {
+    xMusic: {
+      key: "xMusic",
+      collection: "music",
+      storageKey: "xOS_Music",
+    },
     xFiles: {
       key: "xFiles",
       collection: "files",
       storageKey: "xOS_Files",
     },
+    xCode: {
+      key: "xCode",
+      collection: "code",
+      storageKey: "xOS_Code",
+    },
+    xNotepad: {
+      key: "xNotepad",
+      collection: "notepad",
+      storageKey: "xOS_Notepad",
+    },
+    xMarkdown: {
+      key: "xMarkdown",
+      collection: "markdown",
+      storageKey: "xOS_Markdown",
+    },
+    xPaper: {
+      key: "xPaper",
+      collection: "paper",
+      storageKey: "xOS_Paper",
+    },
+    xSpreadsheet: {
+      key: "xSpreadsheet",
+      collection: "spreadsheet",
+      storageKey: "xOS_Spreadsheet",
+    },
   };
-  const totalTasks = Object.keys(appsToSync).length;
+  const totalTasks = Object.keys(appsToBackup).length;
 
   const { markAsCompleted, percentage, isComplete } = useTaskCompletion(
     totalTasks,
-    5
+    totalTasks * 2
   );
 
   const onMessage = (e) => {
     if (e.origin.endsWith(".xos.dev")) {
       let { key, response, method } = e.data;
       if (method === "RESPONSE") {
-        const appForSync = Object.values(appsToSync).find(
+        const appForSync = Object.values(appsToBackup).find(
           (x) => x.storageKey === key
         );
         const desktopApp = desktop.apps.find((x) => x.name === appForSync.key);
@@ -284,7 +314,7 @@ export const BackupScreen = (props) => {
   useEffect(() => {
     window.addEventListener("message", onMessage, false);
 
-    const desktopApps = desktop.apps.filter((app) => appsToSync[app.name]);
+    const desktopApps = desktop.apps.filter((app) => appsToBackup[app.name]);
 
     desktopApps.forEach((desktopApp, i) => {
       waitWindowToLoad(() => {
@@ -293,7 +323,9 @@ export const BackupScreen = (props) => {
           payload: "full",
         });
         waitWindowToLoad(() => {
-          communicationContext.retrieve(appsToSync[desktopApp.name].storageKey);
+          communicationContext.retrieve(
+            appsToBackup[desktopApp.name].storageKey
+          );
         }, i);
       }, i);
     });
@@ -340,22 +372,52 @@ export const SyncScreen = (props) => {
 
   const desktop = useSelector((state) => state.desktop);
 
-  const appsToBackup = {
+  const appsToSync = {
+    xMusic: {
+      key: "xMusic",
+      collection: "music",
+      storageKey: "xOS_Music",
+    },
     xFiles: {
       key: "xFiles",
       collection: "files",
       storageKey: "xOS_Files",
     },
+    xCode: {
+      key: "xCode",
+      collection: "code",
+      storageKey: "xOS_Code",
+    },
+    xNotepad: {
+      key: "xNotepad",
+      collection: "notepad",
+      storageKey: "xOS_Notepad",
+    },
+    xMarkdown: {
+      key: "xMarkdown",
+      collection: "markdown",
+      storageKey: "xOS_Markdown",
+    },
+    xPaper: {
+      key: "xPaper",
+      collection: "paper",
+      storageKey: "xOS_Paper",
+    },
+    xSpreadsheet: {
+      key: "xSpreadsheet",
+      collection: "spreadsheet",
+      storageKey: "xOS_Spreadsheet",
+    },
   };
-  const totalTasks = Object.keys(appsToBackup).length;
+  const totalTasks = Object.keys(appsToSync).length;
 
   const { markAsCompleted, percentage, isComplete } = useTaskCompletion(
     totalTasks,
-    5
+    totalTasks * 2
   );
 
   useEffect(() => {
-    const desktopApps = desktop.apps.filter((app) => appsToBackup[app.name]);
+    const desktopApps = desktop.apps.filter((app) => appsToSync[app.name]);
     desktopApps.forEach((desktopApp, i) => {
       waitWindowToLoad(() => {
         dispatch({
@@ -365,9 +427,9 @@ export const SyncScreen = (props) => {
         waitWindowToLoad(
           () =>
             synchronizationContext
-              .read(appsToBackup[desktopApp.name].collection)
+              .read(appsToSync[desktopApp.name].collection)
               .then((data) => {
-                const appForBackup = appsToBackup[desktopApp.name];
+                const appForBackup = appsToSync[desktopApp.name];
                 communicationContext.store(appForBackup.storageKey, data.data);
                 waitWindowToLoad(() => {
                   dispatch({
