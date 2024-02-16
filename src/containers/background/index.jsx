@@ -236,41 +236,41 @@ export const BackupScreen = (props) => {
   const desktop = useSelector((state) => state.desktop);
 
   const appsToBackup = {
-    xMusic: {
-      key: "xMusic",
-      collection: "music",
-      storageKey: "xOS_Music",
-    },
     xFiles: {
       key: "xFiles",
       collection: "files",
       storageKey: "xOS_Files",
     },
-    xCode: {
-      key: "xCode",
-      collection: "code",
-      storageKey: "xOS_Code",
-    },
-    xNotepad: {
-      key: "xNotepad",
-      collection: "notepad",
-      storageKey: "xOS_Notepad",
-    },
-    xMarkdown: {
-      key: "xMarkdown",
-      collection: "markdown",
-      storageKey: "xOS_Markdown",
-    },
-    xPaper: {
-      key: "xPaper",
-      collection: "paper",
-      storageKey: "xOS_Paper",
-    },
-    xSpreadsheet: {
-      key: "xSpreadsheet",
-      collection: "spreadsheet",
-      storageKey: "xOS_Spreadsheet",
-    },
+    // xMusic: {
+    //   key: "xMusic",
+    //   collection: "music",
+    //   storageKey: "xOS_Music",
+    // },
+    // xCode: {
+    //   key: "xCode",
+    //   collection: "code",
+    //   storageKey: "xOS_Code",
+    // },
+    // xNotepad: {
+    //   key: "xNotepad",
+    //   collection: "notepad",
+    //   storageKey: "xOS_Notepad",
+    // },
+    // xMarkdown: {
+    //   key: "xMarkdown",
+    //   collection: "markdown",
+    //   storageKey: "xOS_Markdown",
+    // },
+    // xPaper: {
+    //   key: "xPaper",
+    //   collection: "paper",
+    //   storageKey: "xOS_Paper",
+    // },
+    // xSpreadsheet: {
+    //   key: "xSpreadsheet",
+    //   collection: "spreadsheet",
+    //   storageKey: "xOS_Spreadsheet",
+    // },
   };
   const totalTasks = Object.keys(appsToBackup).length;
 
@@ -373,41 +373,41 @@ export const SyncScreen = (props) => {
   const desktop = useSelector((state) => state.desktop);
 
   const appsToSync = {
-    xMusic: {
-      key: "xMusic",
-      collection: "music",
-      storageKey: "xOS_Music",
-    },
     xFiles: {
       key: "xFiles",
       collection: "files",
       storageKey: "xOS_Files",
     },
-    xCode: {
-      key: "xCode",
-      collection: "code",
-      storageKey: "xOS_Code",
-    },
-    xNotepad: {
-      key: "xNotepad",
-      collection: "notepad",
-      storageKey: "xOS_Notepad",
-    },
-    xMarkdown: {
-      key: "xMarkdown",
-      collection: "markdown",
-      storageKey: "xOS_Markdown",
-    },
-    xPaper: {
-      key: "xPaper",
-      collection: "paper",
-      storageKey: "xOS_Paper",
-    },
-    xSpreadsheet: {
-      key: "xSpreadsheet",
-      collection: "spreadsheet",
-      storageKey: "xOS_Spreadsheet",
-    },
+    // xMusic: {
+    //   key: "xMusic",
+    //   collection: "music",
+    //   storageKey: "xOS_Music",
+    // },
+    // xCode: {
+    //   key: "xCode",
+    //   collection: "code",
+    //   storageKey: "xOS_Code",
+    // },
+    // xNotepad: {
+    //   key: "xNotepad",
+    //   collection: "notepad",
+    //   storageKey: "xOS_Notepad",
+    // },
+    // xMarkdown: {
+    //   key: "xMarkdown",
+    //   collection: "markdown",
+    //   storageKey: "xOS_Markdown",
+    // },
+    // xPaper: {
+    //   key: "xPaper",
+    //   collection: "paper",
+    //   storageKey: "xOS_Paper",
+    // },
+    // xSpreadsheet: {
+    //   key: "xSpreadsheet",
+    //   collection: "spreadsheet",
+    //   storageKey: "xOS_Spreadsheet",
+    // },
   };
   const totalTasks = Object.keys(appsToSync).length;
 
