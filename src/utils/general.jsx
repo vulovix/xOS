@@ -40,6 +40,7 @@ export const Icon = (props) => {
   }
 
   const clickDispatch = (event) => {
+    // console.log("HERE", event);
     if (!sidepane.banhide) dispatch({ type: "BANDHIDE" });
 
     var action = {
@@ -133,6 +134,7 @@ export const Icon = (props) => {
               data-invert={props.invert != null ? "true" : "false"}
               data-rounded={props.rounded != null ? "true" : "false"}
               src={src}
+              referrerpolicy="no-referrer"
               style={{
                 margin: props.margin || null,
               }}
@@ -151,6 +153,7 @@ export const Icon = (props) => {
             data-invert={props.invert != null ? "true" : "false"}
             data-rounded={props.rounded != null ? "true" : "false"}
             src={src}
+            referrerpolicy="no-referrer"
             style={{
               margin: props.margin || null,
             }}

@@ -19,6 +19,8 @@ import {
   BootScreen,
   LockScreen,
   UpdateScreen,
+  SyncScreen,
+  BackupScreen,
 } from "./containers/background";
 
 import { loadSettings, preinstallApps } from "./actions";
@@ -143,6 +145,8 @@ function App() {
   return (
     <div className="App">
       <ErrorBoundary FallbackComponent={ErrorFallback}>
+        {wall.backup ? <BackupScreen dir={wall.dir} /> : null}
+        {wall.sync ? <SyncScreen dir={wall.dir} /> : null}
         {wall.update ? <UpdateScreen dir={wall.dir} /> : null}
         {!wall.booted ? <BootScreen dir={wall.dir} /> : null}
         {wall.locked ? <LockScreen dir={wall.dir} /> : null}

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import i18next from "i18next";
-import { login, logout } from "../../../components/auth";
+import { login, logout } from "~/server/auth";
 
-import { installApp, delApp } from "../../../actions";
+import { installApp, delApp } from "~/actions";
 
-import { Icon, ToolBar } from "../../../utils/general";
+import { Icon, ToolBar } from "~/utils/general";
 import dirs from "./assets/dir.json";
 
 export const WnTerminal = () => {
@@ -20,13 +20,13 @@ export const WnTerminal = () => {
   let IpDetails = [];
   const getIPDetails = async () => {
     try {
-      const response = await fetch("https://ipapi.co/json")
+      await fetch("https://ipapi.co/json")
         .then((response) => response.json())
         .then((data) => {
           IpDetails.push(data);
         });
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       // handling the error
       IpDetails.push({
         ip: "__network_error",

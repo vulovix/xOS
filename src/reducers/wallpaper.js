@@ -102,6 +102,42 @@ const wallReducer = (state = defState, action) => {
         update: false,
         act: "",
       };
+    case "WALLBACKUP":
+      return {
+        ...state,
+        booted: true,
+        dir: -1,
+        locked: false,
+        backup: true,
+        act: "",
+      };
+    case "WALLBACKUPED":
+      return {
+        ...state,
+        booted: true,
+        dir: 0,
+        locked: false,
+        backup: false,
+        act: "",
+      };
+    case "WALLSYNC":
+      return {
+        ...state,
+        booted: true,
+        dir: -1,
+        locked: false,
+        sync: true,
+        act: "",
+      };
+    case "WALLSYNCED":
+      return {
+        ...state,
+        booted: true,
+        dir: 0,
+        locked: false,
+        sync: false,
+        act: "",
+      };
     case "WALLSHUTDN":
       return {
         ...state,

@@ -1,8 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Battery from "../../components/shared/Battery";
 import { Icon, Image } from "../../utils/general";
 import "./back.scss";
+import CommunicationProviderContext from "~/providers/Communication/context";
+import SynchronizationProviderContext from "~/providers/Synchronization/context";
+import useTaskCompletion from "~/hooks/useTaskStatusCompletion";
+import { getAuth } from "firebase/auth";
 
 export const Background = () => {
   const wall = useSelector((state) => state.wallpaper);
@@ -26,7 +30,6 @@ export const BootScreen = (props) => {
   useEffect(() => {
     if (props.dir < 0) {
       setTimeout(() => {
-        console.log("blackout");
         setBlackOut(true);
       }, 4000);
     }
@@ -60,6 +63,7 @@ export const BootScreen = (props) => {
 };
 
 export const LockScreen = (props) => {
+  const user = getAuth().currentUser;
   const wall = useSelector((state) => state.wallpaper);
   const [lock, setLock] = useState(false);
   const [unlocked, setUnLock] = useState(false);
@@ -132,11 +136,14 @@ export const LockScreen = (props) => {
       <div className="fadeinScreen" data-faded={!lock} data-unlock={unlocked}>
         <img
           className="rounded-full overflow-hidden"
-          src="img/asset/prof.png"
+          src={user ? user.photoURL : "img/asset/prof.png"}
           alt="Profile"
-          width={140}
+          referrerpolicy="no-referrer"
+          // width={140}
         />
-        <div className="mt-6 text-3xl font-bold text-gray-100">{userName}</div>
+        <div className="mt-6 text-3xl font-bold text-gray-100">
+          {user ? user.displayName : userName}
+        </div>
         <div className="flex items-center mt-6 signInBtn" onClick={proceed}>
           Sign in
         </div>
@@ -211,6 +218,193 @@ export const UpdateScreen = (props) => {
 
           <div class="update__text footer">
             <p>Your computer might restart few times.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const waitWindowToLoad = (cb, index) => setTimeout(cb, 1000 * (index + 1));
+
+export const BackupScreen = (props) => {
+  const dispatch = useDispatch();
+
+  const communicationContext = useContext(CommunicationProviderContext);
+  const synchronizationContext = useContext(SynchronizationProviderContext);
+
+  const desktop = useSelector((state) => state.desktop);
+
+  const appsToSync = {
+    xFiles: {
+      key: "xFiles",
+      collection: "files",
+      storageKey: "xOS_Files",
+    },
+  };
+  const totalTasks = Object.keys(appsToSync).length;
+
+  const { markAsCompleted, percentage, isComplete } = useTaskCompletion(
+    totalTasks,
+    5
+  );
+
+  const onMessage = (e) => {
+    if (e.origin.endsWith(".xos.dev")) {
+      let { key, response, method } = e.data;
+      if (method === "RESPONSE") {
+        const appForSync = Object.values(appsToSync).find(
+          (x) => x.storageKey === key
+        );
+        const desktopApp = desktop.apps.find((x) => x.name === appForSync.key);
+        if (response) {
+          synchronizationContext
+            .write(appForSync.collection, response)
+            .then(() => {
+              dispatch({
+                type: desktopApp.action,
+                payload: "close",
+              });
+              markAsCompleted();
+            });
+        } else {
+          console.log(
+            `Nothing written inside ${desktopApp.name}. Response was empty.`
+          );
+          dispatch({
+            type: desktopApp.action,
+            payload: "close",
+          });
+          markAsCompleted();
+        }
+      }
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", onMessage, false);
+
+    const desktopApps = desktop.apps.filter((app) => appsToSync[app.name]);
+
+    desktopApps.forEach((desktopApp, i) => {
+      waitWindowToLoad(() => {
+        dispatch({
+          type: desktopApp.action,
+          payload: "full",
+        });
+        waitWindowToLoad(() => {
+          communicationContext.retrieve(appsToSync[desktopApp.name].storageKey);
+        }, i);
+      }, i);
+    });
+
+    return () => {
+      window.removeEventListener("message", onMessage, false);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isComplete) {
+      dispatch({ type: "WALLBACKUPED" });
+    }
+  }, [isComplete]);
+
+  return (
+    <div className={`update-screen ${props.dir === -1 ? "slowfadein" : ""}`}>
+      <div class="update">
+        <div class="update__content_wrapper">
+          <div className="bumper" />
+          <div className="update__content">
+            <Loader />
+
+            <div class="update__text header">
+              <p id="update__percentage">You're {percentage}% cloud-ready.</p>
+              <p>Please keep your computer on.</p>
+            </div>
+          </div>
+
+          <div class="update__text footer">
+            <p>We are creating a backup of your data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const SyncScreen = (props) => {
+  const dispatch = useDispatch();
+
+  const communicationContext = useContext(CommunicationProviderContext);
+  const synchronizationContext = useContext(SynchronizationProviderContext);
+
+  const desktop = useSelector((state) => state.desktop);
+
+  const appsToBackup = {
+    xFiles: {
+      key: "xFiles",
+      collection: "files",
+      storageKey: "xOS_Files",
+    },
+  };
+  const totalTasks = Object.keys(appsToBackup).length;
+
+  const { markAsCompleted, percentage, isComplete } = useTaskCompletion(
+    totalTasks,
+    5
+  );
+
+  useEffect(() => {
+    const desktopApps = desktop.apps.filter((app) => appsToBackup[app.name]);
+    desktopApps.forEach((desktopApp, i) => {
+      waitWindowToLoad(() => {
+        dispatch({
+          type: desktopApp.action,
+          payload: "full",
+        });
+        waitWindowToLoad(
+          () =>
+            synchronizationContext
+              .read(appsToBackup[desktopApp.name].collection)
+              .then((data) => {
+                const appForBackup = appsToBackup[desktopApp.name];
+                communicationContext.store(appForBackup.storageKey, data.data);
+                waitWindowToLoad(() => {
+                  dispatch({
+                    type: desktopApp.action,
+                    payload: "close",
+                  });
+                  markAsCompleted();
+                }, i);
+              }),
+          i
+        );
+      }, i);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (isComplete) {
+      dispatch({ type: "WALLSYNCED" });
+    }
+  }, [isComplete]);
+
+  return (
+    <div className={`update-screen ${props.dir === -1 ? "slowfadein" : ""}`}>
+      <div class="update">
+        <div class="update__content_wrapper">
+          <div className="bumper" />
+          <div className="update__content">
+            <Loader />
+
+            <div class="update__text header">
+              <p id="update__percentage">You data is {percentage}% loaded.</p>
+              <p>Please keep your computer on.</p>
+            </div>
+          </div>
+
+          <div class="update__text footer">
+            <p>We are synching your data.</p>
           </div>
         </div>
       </div>

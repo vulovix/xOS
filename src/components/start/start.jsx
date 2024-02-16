@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Icon } from "../../utils/general";
+import { getAuth } from "firebase/auth";
 
 export const StartMenu = () => {
+  const user = getAuth().currentUser;
   const { align } = useSelector((state) => state.taskbar);
   const start = useSelector((state) => {
     var arr = state.startmenu,
@@ -106,7 +108,6 @@ export const StartMenu = () => {
   }, [query]);
 
   const userName = useSelector((state) => state.setting.person.name);
-
   return (
     <div
       className="startMenu dpShad"
@@ -262,36 +263,93 @@ export const StartMenu = () => {
           <div className="menuBar">
             <div className="profile handcr">
               <Icon
-                src="blueProf"
+                src={user ? user.photoURL : "img/asset/prof.png"}
+                ext={Boolean(user)}
                 ui
                 rounded
                 width={26}
                 click="EXTERNAL"
                 payload="https://xos.dev"
               />
-              <div className="usName">{userName}</div>
+              <div className="usName">{user ? user.displayName : userName}</div>
             </div>
             <div className="relative powerMenu">
-              <div className="powerCont" data-vis={start.pwctrl}>
+              <div
+                className={`powerCont ${user ? "logged-in" : ""}`}
+                data-vis={start.pwctrl}
+              >
                 <div
                   className="flex prtclk items-center gap-2"
                   onClick={clickDispatch}
                   data-action="WALLALOCK"
                 >
                   <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     width="18"
                     height="18"
                     fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      d="M12 2a4 4 0 0 1 4 4v2h1.75A2.25 2.25 0 0 1 20 10.25v9.5A2.25 2.25 0 0 1 17.75 22H6.25A2.25 2.25 0 0 1 4 19.75v-9.5A2.25 2.25 0 0 1 6.25 8H8V6a4 4 0 0 1 4-4Zm5.75 7.5H6.25a.75.75 0 0 0-.75.75v9.5c0 .414.336.75.75.75h11.5a.75.75 0 0 0 .75-.75v-9.5a.75.75 0 0 0-.75-.75Zm-5.75 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm0-10A2.5 2.5 0 0 0 9.5 6v2h5V6A2.5 2.5 0 0 0 12 3.5Z"
-                      fill="currentColor"
-                    />
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <path d="M5 13a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-6z" />
+                    <path d="M11 16a1 1 0 1 0 2 0 1 1 0 0 0-2 0M8 11V7a4 4 0 1 1 8 0v4" />
                   </svg>
                   <span>Lock</span>
                 </div>
+
+                {user ? (
+                  <>
+                    <div
+                      className="flex prtclk items-center gap-2"
+                      onClick={clickDispatch}
+                      data-action="WALLSYNC"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <path d="M19 18a3.5 3.5 0 0 0 0-7h-1A5 4.5 0 0 0 7 9a4.6 4.4 0 0 0-2.1 8.4M12 13v9M9 19l3 3 3-3" />
+                      </svg>
+                      <span>Sync</span>
+                    </div>
+                    <div
+                      className="flex prtclk items-center gap-2"
+                      onClick={clickDispatch}
+                      data-action="WALLBACKUP"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="18"
+                        height="18"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        viewBox="0 0 24 24"
+                      >
+                        <path stroke="none" d="M0 0h24v24H0z" />
+                        <path d="M7 18a4.6 4.4 0 0 1 0-9 5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1" />
+                        <path d="m9 15 3-3 3 3M12 12v9" />
+                      </svg>
+                      <span>Backup</span>
+                    </div>
+                  </>
+                ) : (
+                  <></>
+                )}
 
                 <div
                   className="flex prtclk items-center gap-2"
@@ -301,18 +359,16 @@ export const StartMenu = () => {
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="18"
-                    height="16"
-                    fill="none"
+                    height="18"
+                    fill="currentColor"
                     stroke="currentColor"
                     strokeWidth={0}
-                    viewBox="0 0 15 15"
+                    viewBox="0 0 24 24"
                   >
+                    <path fill="none" stroke="none" d="M0 0h24v24H0z" />
                     <path
-                      fill="currentColor"
-                      fillRule="evenodd"
                       stroke="none"
-                      d="M1.903 7.297c0 3.044 2.207 5.118 4.686 5.547a.521.521 0 1 1-.178 1.027C3.5 13.367.861 10.913.861 7.297c0-1.537.699-2.745 1.515-3.663.585-.658 1.254-1.193 1.792-1.602H2.532a.5.5 0 0 1 0-1h3a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-1 0V2.686l-.001.002c-.572.43-1.27.957-1.875 1.638-.715.804-1.253 1.776-1.253 2.97Zm11.108.406c0-3.012-2.16-5.073-4.607-5.533a.521.521 0 1 1 .192-1.024c2.874.54 5.457 2.98 5.457 6.557 0 1.537-.699 2.744-1.515 3.663-.585.658-1.254 1.193-1.792 1.602h1.636a.5.5 0 1 1 0 1h-3a.5.5 0 0 1-.5-.5v-3a.5.5 0 1 1 1 0v1.845h.002c.571-.432 1.27-.958 1.874-1.64.715-.803 1.253-1.775 1.253-2.97Z"
-                      clipRule="evenodd"
+                      d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.8-9.88-.1-2.73 2.71-2.73 7.08 0 9.79s7.15 2.71 9.88 0C18.32 15.65 19 14.08 19 12.1h2c0 1.98-.88 4.55-2.64 6.29-3.51 3.48-9.21 3.48-12.72 0-3.5-3.47-3.53-9.11-.02-12.58s9.14-3.47 12.65 0L21 3v7.12zM12.5 8v4.25l3.5 2.08-.72 1.21L11 13V8h1.5z"
                     />
                   </svg>
                   <span>Update</span>
@@ -323,16 +379,18 @@ export const StartMenu = () => {
                   data-action="WALLRESTART"
                 >
                   <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     width="18"
                     height="18"
                     fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      d="M12 4.5a7.5 7.5 0 1 1-7.419 6.392c.067-.454-.265-.892-.724-.892a.749.749 0 0 0-.752.623A9 9 0 1 0 6 5.292V4.25a.75.75 0 0 0-1.5 0v3c0 .414.336.75.75.75h3a.75.75 0 0 0 0-1.5H6.9a7.473 7.473 0 0 1 5.1-2Z"
-                      fill="currentColor"
-                    />
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <path d="M9 4.55a8 8 0 0 1 6 14.9M15 15v5h5M5.63 7.16v.01M4.06 11v.01M4.63 15.1v.01M7.16 18.37v.01M11 19.94v.01" />
                   </svg>
                   <span>Restart</span>
                 </div>
@@ -342,33 +400,37 @@ export const StartMenu = () => {
                   data-action="WALLSHUTDN"
                 >
                   <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     width="18"
                     height="18"
                     fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <path
-                      d="M8.204 4.82a.75.75 0 0 1 .634 1.36A7.51 7.51 0 0 0 4.5 12.991c0 4.148 3.358 7.51 7.499 7.51s7.499-3.362 7.499-7.51a7.51 7.51 0 0 0-4.323-6.804.75.75 0 1 1 .637-1.358 9.01 9.01 0 0 1 5.186 8.162c0 4.976-4.029 9.01-9 9.01C7.029 22 3 17.966 3 12.99a9.01 9.01 0 0 1 5.204-8.17ZM12 2.496a.75.75 0 0 1 .743.648l.007.102v7.5a.75.75 0 0 1-1.493.102l-.007-.102v-7.5a.75.75 0 0 1 .75-.75Z"
-                      fill="currentColor"
-                    />
+                    <path stroke="none" d="M0 0h24v24H0z" />
+                    <path d="M7 6a7.75 7.75 0 1 0 10 0M12 4v8" />
                   </svg>
                   <span>Shut down</span>
                 </div>
               </div>
               <svg
+                xmlns="http://www.w3.org/2000/svg"
                 width="20"
                 height="20"
                 fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
                 onClick={clickDispatch}
                 data-action="STARTPWC"
               >
-                <path
-                  d="M8.204 4.82a.75.75 0 0 1 .634 1.36A7.51 7.51 0 0 0 4.5 12.991c0 4.148 3.358 7.51 7.499 7.51s7.499-3.362 7.499-7.51a7.51 7.51 0 0 0-4.323-6.804.75.75 0 1 1 .637-1.358 9.01 9.01 0 0 1 5.186 8.162c0 4.976-4.029 9.01-9 9.01C7.029 22 3 17.966 3 12.99a9.01 9.01 0 0 1 5.204-8.17ZM12 2.496a.75.75 0 0 1 .743.648l.007.102v7.5a.75.75 0 0 1-1.493.102l-.007-.102v-7.5a.75.75 0 0 1 .75-.75Z"
-                  fill="currentColor"
-                />
+                <path stroke="none" d="M0 0h24v24H0z" />
+                <path d="M7 6a7.75 7.75 0 1 0 10 0M12 4v8" />
               </svg>
             </div>
           </div>

@@ -53,7 +53,6 @@ export const deskHide = (payload, menu) => {
 };
 
 export const toggleFullscreen = (payload, menu) => {
-  console.log(payload, menu);
   var tmpMenu = { ...menu };
   tmpMenu.menus.desk[0].opts[5].check ^= 1;
 

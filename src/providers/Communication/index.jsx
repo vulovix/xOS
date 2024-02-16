@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import CommunicationProviderContext from "./context";
 
 export default function CommunicationProvider(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const iFrameSelector = 'iframe[src="https://files.xos.dev"]';
+
   const retrieve = (key) => {
     document.querySelector(iFrameSelector).contentWindow.postMessage(
       {
@@ -25,23 +26,6 @@ export default function CommunicationProvider(props) {
     );
   };
 
-  const onMessage = (e) => {
-    if (e.origin.endsWith(".xos.dev")) {
-      let { key, response, method } = e.data;
-      if (method === "RESPONSE") {
-        console.log({ key, value: JSON.parse(response) });
-      }
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("message", onMessage, false);
-
-    return () => {
-      window.removeEventListener("message", onMessage, false);
-    };
-  }, [isLoaded]);
-
   const onIFrameLoad = () => {
     setIsLoaded(true);
   };
@@ -50,6 +34,8 @@ export default function CommunicationProvider(props) {
     <CommunicationProviderContext.Provider
       value={{
         isLoaded,
+        store,
+        retrieve,
         onLoad: onIFrameLoad,
       }}
     >
