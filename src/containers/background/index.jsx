@@ -7,6 +7,7 @@ import CommunicationProviderContext from "~/providers/Communication/context";
 import SynchronizationProviderContext from "~/providers/Synchronization/context";
 import useTaskCompletion from "~/hooks/useTaskStatusCompletion";
 import { getAuth } from "firebase/auth";
+import synchronizationApps from "~/utils/sync";
 
 export const Background = () => {
   const wall = useSelector((state) => state.wallpaper);
@@ -235,44 +236,7 @@ export const BackupScreen = (props) => {
 
   const desktop = useSelector((state) => state.desktop);
 
-  const appsToBackup = {
-    xFiles: {
-      key: "xFiles",
-      collection: "files",
-      storageKey: "xOS_Files",
-    },
-    // xMusic: {
-    //   key: "xMusic",
-    //   collection: "music",
-    //   storageKey: "xOS_Music",
-    // },
-    // xCode: {
-    //   key: "xCode",
-    //   collection: "code",
-    //   storageKey: "xOS_Code",
-    // },
-    // xNotepad: {
-    //   key: "xNotepad",
-    //   collection: "notepad",
-    //   storageKey: "xOS_Notepad",
-    // },
-    // xMarkdown: {
-    //   key: "xMarkdown",
-    //   collection: "markdown",
-    //   storageKey: "xOS_Markdown",
-    // },
-    // xPaper: {
-    //   key: "xPaper",
-    //   collection: "paper",
-    //   storageKey: "xOS_Paper",
-    // },
-    // xSpreadsheet: {
-    //   key: "xSpreadsheet",
-    //   collection: "spreadsheet",
-    //   storageKey: "xOS_Spreadsheet",
-    // },
-  };
-  const totalTasks = Object.keys(appsToBackup).length;
+  const totalTasks = Object.keys(synchronizationApps).length;
 
   const { markAsCompleted, percentage, isComplete } = useTaskCompletion(
     totalTasks,
@@ -283,7 +247,7 @@ export const BackupScreen = (props) => {
     if (e.origin.endsWith(".xos.dev")) {
       let { key, response, method } = e.data;
       if (method === "RESPONSE") {
-        const appForSync = Object.values(appsToBackup).find(
+        const appForSync = Object.values(synchronizationApps).find(
           (x) => x.storageKey === key
         );
         const desktopApp = desktop.apps.find((x) => x.name === appForSync.key);
@@ -314,7 +278,9 @@ export const BackupScreen = (props) => {
   useEffect(() => {
     window.addEventListener("message", onMessage, false);
 
-    const desktopApps = desktop.apps.filter((app) => appsToBackup[app.name]);
+    const desktopApps = desktop.apps.filter(
+      (app) => synchronizationApps[app.name]
+    );
 
     desktopApps.forEach((desktopApp, i) => {
       waitWindowToLoad(() => {
@@ -322,9 +288,11 @@ export const BackupScreen = (props) => {
           type: desktopApp.action,
           payload: "full",
         });
+        const synchronizationApp = synchronizationApps[desktopApp.name];
         waitWindowToLoad(() => {
           communicationContext.retrieve(
-            appsToBackup[desktopApp.name].storageKey
+            synchronizationApp.collection,
+            synchronizationApp.storageKey
           );
         }, i);
       }, i);
@@ -372,44 +340,7 @@ export const SyncScreen = (props) => {
 
   const desktop = useSelector((state) => state.desktop);
 
-  const appsToSync = {
-    xFiles: {
-      key: "xFiles",
-      collection: "files",
-      storageKey: "xOS_Files",
-    },
-    // xMusic: {
-    //   key: "xMusic",
-    //   collection: "music",
-    //   storageKey: "xOS_Music",
-    // },
-    // xCode: {
-    //   key: "xCode",
-    //   collection: "code",
-    //   storageKey: "xOS_Code",
-    // },
-    // xNotepad: {
-    //   key: "xNotepad",
-    //   collection: "notepad",
-    //   storageKey: "xOS_Notepad",
-    // },
-    // xMarkdown: {
-    //   key: "xMarkdown",
-    //   collection: "markdown",
-    //   storageKey: "xOS_Markdown",
-    // },
-    // xPaper: {
-    //   key: "xPaper",
-    //   collection: "paper",
-    //   storageKey: "xOS_Paper",
-    // },
-    // xSpreadsheet: {
-    //   key: "xSpreadsheet",
-    //   collection: "spreadsheet",
-    //   storageKey: "xOS_Spreadsheet",
-    // },
-  };
-  const totalTasks = Object.keys(appsToSync).length;
+  const totalTasks = Object.keys(synchronizationApps).length;
 
   const { markAsCompleted, percentage, isComplete } = useTaskCompletion(
     totalTasks,
@@ -417,7 +348,9 @@ export const SyncScreen = (props) => {
   );
 
   useEffect(() => {
-    const desktopApps = desktop.apps.filter((app) => appsToSync[app.name]);
+    const desktopApps = desktop.apps.filter(
+      (app) => synchronizationApps[app.name]
+    );
     desktopApps.forEach((desktopApp, i) => {
       waitWindowToLoad(() => {
         dispatch({
@@ -427,10 +360,14 @@ export const SyncScreen = (props) => {
         waitWindowToLoad(
           () =>
             synchronizationContext
-              .read(appsToSync[desktopApp.name].collection)
+              .read(synchronizationApps[desktopApp.name].collection)
               .then((data) => {
-                const appForBackup = appsToSync[desktopApp.name];
-                communicationContext.store(appForBackup.storageKey, data.data);
+                const synchronizationApp = synchronizationApps[desktopApp.name];
+                communicationContext.store(
+                  synchronizationApp.collection,
+                  synchronizationApp.storageKey,
+                  data.data
+                );
                 waitWindowToLoad(() => {
                   dispatch({
                     type: desktopApp.action,
