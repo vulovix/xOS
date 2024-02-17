@@ -14,8 +14,13 @@ An OS environment in the browser.
 | Fullscreen mode        | View the app in fullscreen mode                                                                                                                                                                                                                                                                        | Desktop > Context Menu > View > Fullscreen mode               |
 | Desktop Icons Drag     | Drag icons on desktop around, for now without persistence                                                                                                                                                                                                                                              | Desktop > Focus on icon > Drag it somewhere else              |
 | DEV: jsconfig paths    | So we can easier navigate around project.                                                                                                                                                                                                                                                              | -                                                             |
+| Login with Google      | User can authenticate with Google and get more functionalities: Display Name, Profile Photo and cloud-related functionalities.                                                                                                                                                                         | Terminal > type `login`                                       |
+| Logout                 | User should be able to logout whenever they want.                                                                                                                                                                                                                                                      | Terminal > type `logout`                                      |
+| Backup Data            | Requires user to be logged in. You can save data in the cloud if you want to, it doesn't need to be in localStorage only. Apps data in the cloud will be overriden.                                                                                                                                    | Start > Power Button > Backup                                 |
+| Synchronize Data       | Requires user to be logged in. You can get data from the cloud. Apps data in the localStorage will be overriden.                                                                                                                                                                                       | Start > Power Button > Sync                                   |
 
 ### Credits
 
 - [upstream](https://github.com/blueedgetechno/win11React)
-  [Logo](https://www.flaticon.com/free-icon/menu_6858536)
+
+- [Logo](https://www.flaticon.com/free-icon/menu_6858536)
