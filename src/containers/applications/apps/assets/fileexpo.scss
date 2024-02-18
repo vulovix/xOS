@@ -216,6 +216,14 @@
   .contentarea {
     height: 100%;
     flex-grow: 1;
+    .editable-area{
+      // outline: none;
+      color: inherit;
+      width: 100%;
+      &::selection {
+        background-color: var(--alt-txt);
+      }
+    }
   }
 }
 

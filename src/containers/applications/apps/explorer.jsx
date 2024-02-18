@@ -32,13 +32,14 @@ const FolderDrop = ({ dir }) => {
     <>
       {folder.data &&
         folder.data.map((item, i) => {
+          console.log("folder data", item);
           if (item.type == "folder") {
             return (
               <Dropdown
                 key={i}
                 icon={item.info && item.info.icon}
                 title={item.name}
-                notoggle={item.data.length == 0}
+                notoggle={item.data.length === 0}
                 dir={item.id}
               />
             );
@@ -93,6 +94,7 @@ const Dropdown = (props) => {
 };
 
 export const Explorer = () => {
+  const [selected, setSelect] = useState(null);
   const apps = useSelector((state) => state.apps);
   const wnapp = useSelector((state) => state.apps.explorer);
   const files = useSelector((state) => state.files);
@@ -108,6 +110,34 @@ export const Explorer = () => {
     if (e.key === "Enter") {
       dispatch({ type: "FILEPATH", payload: cpath });
     }
+  };
+
+  const onAddFile = () => {
+    const fileName = `File ${new Date().getTime()}`;
+    files.data.addByPath(cpath, {
+      type: "file",
+      name: fileName,
+      info: { icon: "file" },
+      data: { content: { value: "New File" } },
+    });
+  };
+
+  const onAddFolder = () => {
+    const name = `Folder ${new Date().getTime()}`;
+    files.data.addByPath(cpath, {
+      type: "folder",
+      name: name,
+    });
+    // dispatch({ type: "FILEPATH", payload: cpath });
+  };
+
+  const onUpdate = (itemId, itemValue) => {
+    files.data.updateItem(itemId, {
+      name: itemValue, // "Updated Name " + new Date().getTime(),
+    });
+  };
+  const onRemove = () => {
+    files.data.removeItem(selected);
   };
 
   const DirCont = () => {
@@ -185,7 +215,12 @@ export const Explorer = () => {
         name="File Explorer"
       />
       <div className="windowScreen flex flex-col">
-        <Ribbon />
+        <Ribbon
+          selected={selected}
+          onRemove={onRemove}
+          onAddFile={onAddFile}
+          onAddFolder={onAddFolder}
+        />
         <div className="restWindow flex-grow flex flex-col">
           <div className="sec1">
             <Icon
@@ -236,10 +271,15 @@ export const Explorer = () => {
           </div>
           <div className="sec2">
             <NavPane />
-            <ContentArea searchtxt={searchtxt} />
+            <ContentArea
+              searchtxt={searchtxt}
+              onUpdate={onUpdate}
+              selected={selected}
+              setSelect={setSelect}
+            />
           </div>
           <div className="sec3">
-            <div className="item-count text-xs">{fdata.data.length} items</div>
+            <div className="item-count text-xs">{fdata.data?.length} items</div>
             <div className="view-opts flex">
               <Icon
                 className="viewicon hvtheme p-1"
@@ -265,10 +305,11 @@ export const Explorer = () => {
   );
 };
 
-const ContentArea = ({ searchtxt }) => {
+const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editValue, setEditValue] = useState("");
   const files = useSelector((state) => state.files);
   const special = useSelector((state) => state.files.data.special);
-  const [selected, setSelect] = useState(null);
   const fdata = files.data.getId(files.cdir);
   const dispatch = useDispatch();
 
@@ -279,6 +320,7 @@ const ContentArea = ({ searchtxt }) => {
 
   const handleDouble = (e) => {
     e.stopPropagation();
+    console.log("handleFileOpen", e.target.dataset.id);
     handleFileOpen(e.target.dataset.id);
   };
 
@@ -287,9 +329,17 @@ const ContentArea = ({ searchtxt }) => {
   };
 
   const handleKey = (e) => {
-    if (e.key == "Backspace") {
+    if (e.key == "Backspace" && !isEditMode) {
       dispatch({ type: "FILEPREV" });
     }
+  };
+
+  const handleOnEdit = (item) => {
+    if (editValue.trim()) {
+      onUpdate(item.id, editValue.trim());
+      setEditValue("");
+    }
+    setIsEditMode(false);
   };
 
   return (
@@ -301,25 +351,43 @@ const ContentArea = ({ searchtxt }) => {
     >
       <div className="contentwrap win11Scroll">
         <div className="gridshow" data-size="lg">
-          {fdata.data.map((item, i) => {
+          {fdata.data?.map((item, i) => {
             return (
               item.name.includes(searchtxt) && (
                 <div
                   key={i}
                   className="conticon hvtheme flex flex-col items-center prtclk"
+                  // prtclk
                   data-id={item.id}
                   data-focus={selected == item.id}
                   onClick={handleClick}
                   onDoubleClick={handleDouble}
                 >
                   <Image src={`icon/win/${item.info.icon}`} />
-                  <span>{item.name}</span>
+                  <span
+                    contentEditable={isEditMode}
+                    className={`${isEditMode ? "editable-area" : ""}`}
+                    onClick={() => {
+                      setSelect(item.id);
+                      setIsEditMode(true);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleOnEdit(item);
+                      }
+                    }}
+                    onBlur={() => handleOnEdit(item)}
+                    onInput={(e) => setEditValue(e.currentTarget.textContent)}
+                    style={{ pointerEvents: "all" }}
+                  >
+                    {isEditMode && selected === item.id ? editValue : item.name}
+                  </span>
                 </div>
               )
             );
           })}
         </div>
-        {fdata.data.length == 0 ? (
+        {!fdata.data || fdata.data?.length == 0 ? (
           <span className="text-xs mx-auto">This folder is empty.</span>
         ) : null}
       </div>
@@ -369,22 +437,31 @@ const NavPane = ({}) => {
   );
 };
 
-const Ribbon = ({}) => {
+const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected }) => {
   return (
     <div className="msribbon flex">
       <div className="ribsec">
-        <div className="drdwcont flex">
+        <div className="drdwcont flex" onClick={onAddFile}>
           <Icon src="new" ui width={18} margin="0 6px" />
-          <span>New</span>
+          <span>New File</span>
+        </div>
+        <div className="drdwcont flex" onClick={onAddFolder}>
+          <Icon src="new" ui width={18} margin="0 6px" />
+          <span>New Folder</span>
         </div>
       </div>
-      <div className="ribsec">
-        <Icon src="cut" ui width={18} margin="0 6px" />
+      {selected ? (
+        <div className="ribsec">
+          <Icon src="cut" ui width={18} margin="0 6px" onClick={onRemove} />
+        </div>
+      ) : (
+        <></>
+      )}
+      {/* <Icon src="cut" ui width={18} margin="0 6px" />
         <Icon src="copy" ui width={18} margin="0 6px" />
-        <Icon src="paste" ui width={18} margin="0 6px" />
-        <Icon src="rename" ui width={18} margin="0 6px" />
-        <Icon src="share" ui width={18} margin="0 6px" />
-      </div>
+        <Icon src="rename" ui width={18} margin="0 6px" onClick={onUpdate} />
+        <Icon src="paste" ui width={18} margin="0 6px" /> */}
+      {/* <Icon src="share" ui width={18} margin="0 6px" /> */}
       <div className="ribsec">
         <div className="drdwcont flex">
           <Icon src="sort" ui width={18} margin="0 6px" />

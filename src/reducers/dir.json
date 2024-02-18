@@ -126,7 +126,11 @@
                   "icon": "down"
                 },
                 "data": {
-                  "Hitman 3": {},
+                  "Hitman 3": {
+                    "data":{
+                      "Hitman 3.1": {}
+                    }
+                  },
                   "Atomforces": {},
                   "Compressed": {},
                   "textures": {},

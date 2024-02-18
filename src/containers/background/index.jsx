@@ -139,7 +139,7 @@ export const LockScreen = (props) => {
           className="rounded-full overflow-hidden"
           src={user ? user.photoURL : "img/asset/prof.png"}
           alt="Profile"
-          referrerpolicy="no-referrer"
+          referrerPolicy="no-referrer"
           // width={140}
         />
         <div className="mt-6 text-3xl font-bold text-gray-100">

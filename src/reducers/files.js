@@ -10,7 +10,11 @@ const defState = {
 
 defState.hist.push(defState.cdir);
 defState.data = new Bin();
-defState.data.parse(fdata);
+defState.data.parse(
+  localStorage.getItem("xOS_Explorer")
+    ? JSON.parse(localStorage.getItem("xOS_Explorer")) || fdata
+    : fdata
+);
 
 const fileReducer = (state = defState, action) => {
   var tmp = { ...state };
@@ -36,6 +40,10 @@ const fileReducer = (state = defState, action) => {
     tmp.hid++;
     if (tmp.hid > tmp.hist.length - 1) tmp.hid = tmp.hist.length - 1;
     navHist = true;
+  } else if (action.type === "FILEOPEN") {
+    tmp.active = action.payload;
+  } else if (action.type === "FILECLOSE") {
+    tmp.active = null;
   }
 
   if (!navHist && tmp.cdir != tmp.hist[tmp.hid]) {

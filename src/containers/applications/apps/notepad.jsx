@@ -1,12 +1,46 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ToolBar } from "../../../utils/general";
 
 export const Notepad = () => {
   const wnapp = useSelector((state) => state.apps.notepad);
+  const files = useSelector((state) => state.files);
+
+  const dispatch = useDispatch();
+
+  const [value, setValue] = useState("");
+
+  const { active } = files;
+
+  useEffect(() => {
+    if (active) {
+      const item = files.data.getId(active);
+      setValue(item.data.content.value);
+    }
+  }, [active]);
+
+  useEffect(() => {
+    if (wnapp.hide) {
+      dispatch({ type: "FILECLOSE" });
+      setValue("");
+    }
+  }, [wnapp.hide]);
+
   const onChange = (e) => {
-    localStorage.setItem("notepad", e.target.value);
+    if (active) {
+      const item = files.data.getId(active);
+      setValue(e.target.value);
+      item.setData({
+        content: {
+          value: e.target.value,
+        },
+      });
+      files.data.saveChanges();
+    } else {
+      setValue(e.target.value);
+    }
   };
+
   return (
     <div
       className="notepad floatTab dpShad"
@@ -34,10 +68,10 @@ export const Notepad = () => {
         <div className="restWindow h-full flex-grow">
           <div className="w-full h-full overflow-hidden">
             <textarea
-              onChange={onChange}
-              defaultValue={localStorage.getItem("notepad") || ""}
-              className="noteText win11Scroll"
               id="textpad"
+              value={value}
+              onChange={onChange}
+              className="noteText win11Scroll"
             />
           </div>
         </div>

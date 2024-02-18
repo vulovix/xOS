@@ -324,32 +324,25 @@ export const preinstallApps = () => {
       );
     }
   }
-
-  // if (installed === null) {
-  //   const configureApp = ({ appName, appURL, appIcon }) => ({
-  //     type: "app",
-  //     icon: appIcon,
-  //     name: appName,
-  //     data: {
-  //       pwa: true,
-  //       url: appURL,
-  //       invert: false,
-  //       type: "IFrame",
-  //     },
-  //   });
-
-  //   const appsToPreinstall = preinstalledApps.map((app) => configureApp(app));
-  //   appsToPreinstall.forEach(installApp);
-  // }
 };
 
 // mostly file explorer
 export const handleFileOpen = (id) => {
+  console.log("handleFileOpen", id);
+  if (!id) {
+    return;
+  }
   // handle double click open
   const item = store.getState().files.data.getId(id);
+  // console.log("handleFileOpen 1", id, item);
   if (item != null) {
     if (item.type == "folder") {
       store.dispatch({ type: "FILEDIR", payload: item.id });
+    }
+    if (item.type == "file") {
+      store.dispatch({ type: "FILEOPEN", payload: item.id });
+      store.dispatch({ type: "NOTEPAD", payload: "full" });
+      // console.log("open", item);
     }
   }
 };

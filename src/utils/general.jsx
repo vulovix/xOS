@@ -134,7 +134,7 @@ export const Icon = (props) => {
               data-invert={props.invert != null ? "true" : "false"}
               data-rounded={props.rounded != null ? "true" : "false"}
               src={src}
-              referrerpolicy="no-referrer"
+              referrerPolicy="no-referrer"
               style={{
                 margin: props.margin || null,
               }}
@@ -153,7 +153,7 @@ export const Icon = (props) => {
             data-invert={props.invert != null ? "true" : "false"}
             data-rounded={props.rounded != null ? "true" : "false"}
             src={src}
-            referrerpolicy="no-referrer"
+            referrerPolicy="no-referrer"
             style={{
               margin: props.margin || null,
             }}
