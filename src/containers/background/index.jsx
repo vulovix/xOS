@@ -199,7 +199,6 @@ export const UpdateScreen = (props) => {
     } else {
       clearTimeout(t);
       dispatch({ type: "WALLUPDATED" });
-      console.log("done update");
     }
   };
 
@@ -282,7 +281,9 @@ export const BackupScreen = (props) => {
       (app) => synchronizationApps[app.name]
     );
 
-    desktopApps.forEach((desktopApp, i) => {
+    const externalDesktopApps = desktopApps.filter((x) => x.pwa);
+
+    externalDesktopApps.forEach((desktopApp, i) => {
       waitWindowToLoad(() => {
         dispatch({
           type: desktopApp.action,
@@ -297,6 +298,28 @@ export const BackupScreen = (props) => {
         }, i);
       }, i);
     });
+
+    const localDesktopApps = desktopApps.filter((x) => !x.pwa);
+
+    localDesktopApps.forEach((desktopApp, i) =>
+      waitWindowToLoad(() => {
+        const synchronizationApp = synchronizationApps[desktopApp.name];
+        const response = communicationContext.retrieveLocally(
+          synchronizationApp.storageKey
+        );
+        waitWindowToLoad(() => {
+          synchronizationContext
+            .write(synchronizationApp.collection, response)
+            .then(() => {
+              dispatch({
+                type: desktopApp.action,
+                payload: "close",
+              });
+              markAsCompleted();
+            });
+        }, i);
+      }, i)
+    );
 
     return () => {
       window.removeEventListener("message", onMessage, false);
@@ -351,7 +374,10 @@ export const SyncScreen = (props) => {
     const desktopApps = desktop.apps.filter(
       (app) => synchronizationApps[app.name]
     );
-    desktopApps.forEach((desktopApp, i) => {
+
+    const externalDesktopApps = desktopApps.filter((x) => x.pwa);
+
+    externalDesktopApps.forEach((desktopApp, i) => {
       waitWindowToLoad(() => {
         dispatch({
           type: desktopApp.action,
@@ -380,6 +406,31 @@ export const SyncScreen = (props) => {
         );
       }, i);
     });
+
+    const localDesktopApps = desktopApps.filter((x) => !x.pwa);
+
+    localDesktopApps.forEach((desktopApp, i) =>
+      waitWindowToLoad(
+        () =>
+          synchronizationContext
+            .read(synchronizationApps[desktopApp.name].collection)
+            .then((data) => {
+              const synchronizationApp = synchronizationApps[desktopApp.name];
+              communicationContext.storeLocally(
+                synchronizationApp.storageKey,
+                data.data
+              );
+              waitWindowToLoad(() => {
+                dispatch({
+                  type: desktopApp.action,
+                  payload: "close",
+                });
+                markAsCompleted();
+              }, i);
+            }),
+        i
+      )
+    );
   }, []);
 
   useEffect(() => {

@@ -32,7 +32,6 @@ const FolderDrop = ({ dir }) => {
     <>
       {folder.data &&
         folder.data.map((item, i) => {
-          console.log("folder data", item);
           if (item.type == "folder") {
             return (
               <Dropdown
@@ -320,7 +319,6 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
 
   const handleDouble = (e) => {
     e.stopPropagation();
-    console.log("handleFileOpen", e.target.dataset.id);
     handleFileOpen(e.target.dataset.id);
   };
 

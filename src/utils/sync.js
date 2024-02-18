@@ -1,4 +1,9 @@
 const synchronizationApps = {
+  "File Explorer": {
+    key: "File Explorer",
+    collection: "explorer",
+    storageKey: "xOS_Explorer",
+  },
   xFiles: {
     key: "xFiles",
     collection: "files",

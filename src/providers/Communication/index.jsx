@@ -43,6 +43,10 @@ export default function CommunicationProvider(props) {
     }
   };
 
+  const retrieveLocally = (key) => localStorage.getItem(key);
+
+  const storeLocally = (key, value) => localStorage.setItem(key, value);
+
   const onIFrameLoad = () => {
     setIsLoaded(true);
   };
@@ -53,6 +57,8 @@ export default function CommunicationProvider(props) {
         isLoaded,
         store,
         retrieve,
+        storeLocally,
+        retrieveLocally,
         onLoad: onIFrameLoad,
       }}
     >
