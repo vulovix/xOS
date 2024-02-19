@@ -1,6 +1,4 @@
-import { desktopApps } from "../utils";
-
-const defState = {
+const initialState = {
   system: {
     power: {
       saver: {
@@ -37,58 +35,71 @@ const defState = {
   },
 };
 
-document.body.dataset.theme = defState.person.theme;
+document.body.dataset.theme = initialState.person.theme;
 
+// Helper function: toggle or set value with a given path inside an object
 const changeVal = (obj, path, val = "togg") => {
-  var tmp = obj;
-  path = path.split(".");
-  for (var i = 0; i < path.length - 1; i++) {
-    tmp = tmp[path[i]];
-  }
+  let tmp = obj;
+  const keys = path.split(".");
+  const lastKey = keys.pop();
 
-  if (val == "togg") {
-    tmp[path[path.length - 1]] = !tmp[path[path.length - 1]];
-  } else {
-    tmp[path[path.length - 1]] = val;
-  }
+  keys.forEach((key) => {
+    tmp = tmp[key];
+  });
 
+  tmp[lastKey] = val === "togg" ? !tmp[lastKey] : val;
   return obj;
 };
 
-const settReducer = (state = defState, action) => {
-  var tmpState = { ...state },
-    changed = false;
+const settingsReducer = (defaultState = initialState, action) => {
+  let state = { ...defaultState };
+  let changed = false;
+
+  const updateState = (newState, path, value) => {
+    changed = true;
+    return changeVal(newState, path, value);
+  };
+
   switch (action.type) {
     case "STNGTHEME":
-      changed = true;
-      tmpState.person.theme = action.payload;
+      state = updateState(state, "person.theme", action.payload);
       break;
+
     case "STNGTOGG":
-      changed = true;
-      tmpState = changeVal(tmpState, action.payload);
+      state = updateState(state, action.payload);
       break;
+
     case "STNGSETV":
-      changed = true;
-      tmpState = changeVal(tmpState, action.payload.path, action.payload.value);
+      const { path, value } = action.payload;
+      state = updateState(state, path, value);
       break;
+
     case "SETTLOAD":
       changed = true;
-      tmpState = { ...action.payload };
+      state = { ...action.payload };
       break;
+
     case "TOGGAIRPLNMD":
       changed = true;
-      const airPlaneModeStatus = tmpState.network.airplane;
-      if (tmpState.network.wifi.state === true && !airPlaneModeStatus) {
-        tmpState = changeVal(tmpState, "network.wifi.state");
+      const { airplane } = state.network;
+      if (state.network.wifi.state && !airplane) {
+        state.network.wifi.state = false;
       }
-      if (tmpState.devices.bluetooth === true && !airPlaneModeStatus) {
-        tmpState = changeVal(tmpState, "devices.bluetooth");
+      if (state.devices.bluetooth && !airplane) {
+        state.devices.bluetooth = false;
       }
-      tmpState = changeVal(tmpState, "network.airplane");
+      state.network.airplane = !airplane;
+      break;
+
+    default:
+    // No need to handle default case with no changes
   }
 
-  if (changed) localStorage.setItem("setting", JSON.stringify(tmpState));
-  return tmpState;
+  if (changed) {
+    localStorage.setItem("setting", JSON.stringify(state));
+  }
+
+  return state;
 };
 
-export default settReducer;
+export default settingsReducer;

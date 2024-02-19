@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 export const AboutWin = () => {
-  const { abOpen } = useSelector((state) => state.desktop);
+  const { aboutOpen } = useSelector((state) => state.desktop);
   const { locked, booted } = useSelector((state) => state.wallpaper);
   const [open, setOpen] = useState(
     true && import.meta.env.MODE != "development"
@@ -28,7 +28,7 @@ export const AboutWin = () => {
     }
   }, [timer, locked, booted]);
 
-  return open || abOpen ? (
+  return open || aboutOpen ? (
     <div className="aboutApp floatTab dpShad">
       <div className="content p-6">
         <div className="text-xl font-semibold">{t("about.title")}</div>

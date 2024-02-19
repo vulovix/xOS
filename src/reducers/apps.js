@@ -1,32 +1,32 @@
 import { allApps } from "../utils";
 
-var dev = "";
+let dev = "";
 if (import.meta.env.MODE == "development") {
   dev = ""; // set the name (lowercase) of the app you are developing so that it will be opened on refresh
 }
 
-const defState = {};
-for (var i = 0; i < allApps.length; i++) {
-  defState[allApps[i].icon] = allApps[i];
-  defState[allApps[i].icon].size = "mini";
-  defState[allApps[i].icon].hide = true;
-  defState[allApps[i].icon].max = null;
-  defState[allApps[i].icon].z = 0;
+const initialState = {};
+for (let i = 0; i < allApps.length; i++) {
+  initialState[allApps[i].icon] = allApps[i];
+  initialState[allApps[i].icon].size = "mini";
+  initialState[allApps[i].icon].hide = true;
+  initialState[allApps[i].icon].max = null;
+  initialState[allApps[i].icon].z = 0;
 
   if (allApps[i].icon == dev) {
-    defState[allApps[i].icon].size = "mini";
-    defState[allApps[i].icon].hide = false;
-    defState[allApps[i].icon].max = true;
-    defState[allApps[i].icon].z = 1;
+    initialState[allApps[i].icon].size = "mini";
+    initialState[allApps[i].icon].hide = false;
+    initialState[allApps[i].icon].max = true;
+    initialState[allApps[i].icon].z = 1;
   }
 }
 
-defState.hz = 2;
+initialState.hz = 2;
 
-const appReducer = (state = defState, action) => {
-  var tmpState = { ...state };
+const appReducer = (defaultState = initialState, action) => {
+  let state = { ...defaultState };
   if (action.type == "EDGELINK") {
-    var obj = { ...tmpState["edge"] };
+    let obj = { ...state["edge"] };
     if (action.payload && action.payload.startsWith("http")) {
       obj.url = action.payload;
     } else if (action.payload && action.payload.length != 0) {
@@ -38,39 +38,39 @@ const appReducer = (state = defState, action) => {
     obj.size = "mini";
     obj.hide = false;
     obj.max = true;
-    tmpState.hz += 1;
-    obj.z = tmpState.hz;
-    tmpState["edge"] = obj;
-    return tmpState;
+    state.hz += 1;
+    obj.z = state.hz;
+    state["edge"] = obj;
+    return state;
   } else if (action.type == "SHOWDSK") {
-    var keys = Object.keys(tmpState);
+    let keys = Object.keys(state);
 
-    for (var i = 0; i < keys.length; i++) {
-      var obj = tmpState[keys[i]];
+    for (let i = 0; i < keys.length; i++) {
+      let obj = state[keys[i]];
       if (obj.hide == false) {
         obj.max = false;
-        if (obj.z == tmpState.hz) {
-          tmpState.hz -= 1;
+        if (obj.z == state.hz) {
+          state.hz -= 1;
         }
         obj.z = -1;
-        tmpState[keys[i]] = obj;
+        state[keys[i]] = obj;
       }
     }
 
-    return tmpState;
+    return state;
   } else if (action.type == "EXTERNAL") {
     window.open(action.payload, "_blank");
   } else if (action.type == "OPENTERM") {
-    var obj = { ...tmpState["terminal"] };
+    let obj = { ...state["terminal"] };
     obj.dir = action.payload;
 
     obj.size = "mini";
     obj.hide = false;
     obj.max = true;
-    tmpState.hz += 1;
-    obj.z = tmpState.hz;
-    tmpState["terminal"] = obj;
-    return tmpState;
+    state.hz += 1;
+    obj.z = state.hz;
+    state["terminal"] = obj;
+    return state;
   } else if (action.type === "TOGGLE_FULSCREEN") {
     if (
       !document.fullscreenElement && // alternative standard method
@@ -102,46 +102,46 @@ const appReducer = (state = defState, action) => {
       }
     }
   } else if (action.type == "ADDAPP") {
-    tmpState[action.payload.icon] = action.payload;
-    tmpState[action.payload.icon].size = "mini";
-    tmpState[action.payload.icon].hide = true;
-    tmpState[action.payload.icon].max = null;
-    tmpState[action.payload.icon].z = 0;
+    state[action.payload.icon] = action.payload;
+    state[action.payload.icon].size = "mini";
+    state[action.payload.icon].hide = true;
+    state[action.payload.icon].max = null;
+    state[action.payload.icon].z = 0;
 
-    return tmpState;
+    return state;
   } else if (action.type == "DELAPP") {
-    delete tmpState[action.payload];
-    return tmpState;
+    delete state[action.payload];
+    return state;
   } else {
-    var keys = Object.keys(state);
-    for (var i = 0; i < keys.length; i++) {
-      var obj = state[keys[i]];
+    let keys = Object.keys(defaultState);
+    for (let i = 0; i < keys.length; i++) {
+      let obj = defaultState[keys[i]];
       if (obj.action == action.type) {
-        tmpState = { ...state };
+        state = { ...defaultState };
 
         if (action.payload == "full") {
           obj.size = "mini";
           obj.hide = false;
           obj.max = true;
-          tmpState.hz += 1;
-          obj.z = tmpState.hz;
+          state.hz += 1;
+          obj.z = state.hz;
         } else if (action.payload == "close") {
           obj.hide = true;
           obj.max = null;
           obj.z = -1;
-          tmpState.hz -= 1;
+          state.hz -= 1;
         } else if (action.payload == "mxmz") {
           obj.size = ["mini", "full"][obj.size != "full" ? 1 : 0];
           obj.hide = false;
           obj.max = true;
-          tmpState.hz += 1;
-          obj.z = tmpState.hz;
+          state.hz += 1;
+          obj.z = state.hz;
         } else if (action.payload == "togg") {
-          if (obj.z != tmpState.hz) {
+          if (obj.z != state.hz) {
             obj.hide = false;
             if (!obj.max) {
-              tmpState.hz += 1;
-              obj.z = tmpState.hz;
+              state.hz += 1;
+              obj.z = state.hz;
               obj.max = true;
             } else {
               obj.z = -1;
@@ -151,43 +151,43 @@ const appReducer = (state = defState, action) => {
             obj.max = !obj.max;
             obj.hide = false;
             if (obj.max) {
-              tmpState.hz += 1;
-              obj.z = tmpState.hz;
+              state.hz += 1;
+              obj.z = state.hz;
             } else {
               obj.z = -1;
-              tmpState.hz -= 1;
+              state.hz -= 1;
             }
           }
         } else if (action.payload == "mnmz") {
           obj.max = false;
           obj.hide = false;
-          if (obj.z == tmpState.hz) {
-            tmpState.hz -= 1;
+          if (obj.z == state.hz) {
+            state.hz -= 1;
           }
           obj.z = -1;
         } else if (action.payload == "resize") {
           obj.size = "cstm";
           obj.hide = false;
           obj.max = true;
-          if (obj.z != tmpState.hz) tmpState.hz += 1;
-          obj.z = tmpState.hz;
+          if (obj.z != state.hz) state.hz += 1;
+          obj.z = state.hz;
           obj.dim = action.dim;
         } else if (action.payload == "front") {
           obj.hide = false;
           obj.max = true;
-          if (obj.z != tmpState.hz) {
-            tmpState.hz += 1;
-            obj.z = tmpState.hz;
+          if (obj.z != state.hz) {
+            state.hz += 1;
+            obj.z = state.hz;
           }
         }
 
-        tmpState[keys[i]] = obj;
-        return tmpState;
+        state[keys[i]] = obj;
+        return state;
       }
     }
   }
 
-  return state;
+  return defaultState;
 };
 
 export default appReducer;

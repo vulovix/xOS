@@ -253,25 +253,27 @@ const defState = {
 };
 
 const menusReducer = (state = defState, action) => {
-  var tmpState = {
-    ...state,
-  };
-  if (action.type == "MENUHIDE") {
-    tmpState.hide = true;
-  } else if (action.type == "MENUSHOW") {
-    tmpState.hide = false;
-    tmpState.top = (action.payload && action.payload.top) || 272;
-    tmpState.left = (action.payload && action.payload.left) || 430;
-    tmpState.opts = (action.payload && action.payload.menu) || "desk";
-    tmpState.attr = action.payload && action.payload.attr;
-    tmpState.dataset = action.payload && action.payload.dataset;
-  } else if (action.type == "MENUCHNG") {
-    tmpState = {
-      ...action.payload,
-    };
-  }
+  switch (action.type) {
+    case "MENUHIDE":
+      return { ...state, hide: true };
 
-  return tmpState;
+    case "MENUSHOW": {
+      const {
+        top = 272,
+        left = 430,
+        menu: opts = "desk",
+        attr,
+        dataset,
+      } = action.payload || {};
+      return { ...state, hide: false, top, left, opts, attr, dataset };
+    }
+
+    case "MENUCHNG":
+      return { ...action.payload };
+
+    default:
+      return state;
+  }
 };
 
 export default menusReducer;

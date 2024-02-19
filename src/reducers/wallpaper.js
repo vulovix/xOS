@@ -1,6 +1,3 @@
-var wps = localStorage.getItem("wps") || 0;
-var locked = localStorage.getItem("locked");
-
 const walls = [
   "Windows/img0.jpg",
   "Windows/img1.jpg",
@@ -34,58 +31,54 @@ const walls = [
 ];
 
 const themes = ["Windows", "Mac", "Chill", "Urban"];
+const wps = localStorage.getItem("wps") || 0;
 
-const defState = {
+const initialState = {
   themes: themes,
-  wps: wps,
+  wps,
   src: walls[wps],
-  locked: !(locked === "false"),
+  locked: localStorage.getItem("locked") !== "false",
   booted: false || import.meta.env.MODE === "development",
   update: false,
   act: "",
   dir: 0,
 };
+const wallpaperReducer = (state = initialState, action) => {
+  let nextState;
 
-const wallReducer = (state = defState, action) => {
   switch (action.type) {
     case "WALLUNLOCK":
-      localStorage.setItem("locked", false);
-      return {
-        ...state,
-        locked: false,
-        dir: 0,
-      };
+      localStorage.setItem("locked", "false");
+      nextState = { ...state, locked: false, dir: 0 };
+      break;
+
     case "WALLNEXT":
-      var twps = ((state.wps || 0) + 1) % walls.length;
-      localStorage.setItem("wps", twps);
-      return {
-        ...state,
-        wps: twps,
-        src: walls[twps],
-      };
+      const nextWps = (state.wps + 1) % walls.length;
+      localStorage.setItem("wps", nextWps.toString());
+      nextState = { ...state, wps: nextWps, src: walls[nextWps] };
+      break;
+
     case "WALLALOCK":
-      return {
-        ...state,
-        locked: true,
-        dir: -1,
-      };
+      localStorage.setItem("locked", "true");
+      nextState = { ...state, locked: true, dir: -1 };
+      break;
+
     case "WALLBOOTED":
-      return {
-        ...state,
-        booted: true,
-        dir: 0,
-        act: "",
-      };
+      nextState = { ...state, booted: true, dir: 0, act: "" };
+      break;
+
     case "WALLRESTART":
-      return {
+      nextState = {
         ...state,
         booted: false,
         dir: -1,
         locked: true,
         act: "restart",
       };
+      break;
+
     case "WALLUPDATE":
-      return {
+      nextState = {
         ...state,
         booted: true,
         dir: -1,
@@ -93,8 +86,10 @@ const wallReducer = (state = defState, action) => {
         update: true,
         act: "",
       };
+      break;
+
     case "WALLUPDATED":
-      return {
+      nextState = {
         ...state,
         booted: true,
         dir: 0,
@@ -102,54 +97,46 @@ const wallReducer = (state = defState, action) => {
         update: false,
         act: "",
       };
+      break;
+
     case "WALLBACKUP":
-      return {
-        ...state,
-        booted: true,
-        dir: -1,
-        locked: false,
-        backup: true,
-        act: "",
-      };
-    case "WALLBACKUPED":
-      return {
-        ...state,
-        booted: true,
-        dir: 0,
-        locked: false,
-        backup: false,
-        act: "",
-      };
     case "WALLSYNC":
-      return {
+      nextState = {
         ...state,
         booted: true,
         dir: -1,
         locked: false,
-        sync: true,
+        [action.type === "WALLBACKUP" ? "backup" : "sync"]: true,
         act: "",
       };
+      break;
+
+    case "WALLBACKUPED":
     case "WALLSYNCED":
-      return {
+      nextState = {
         ...state,
         booted: true,
         dir: 0,
         locked: false,
-        sync: false,
+        [action.type === "WALLBACKUPED" ? "backup" : "sync"]: false,
         act: "",
       };
+      break;
+
     case "WALLSHUTDN":
-      return {
+      nextState = {
         ...state,
         booted: false,
         dir: -1,
         locked: true,
         act: "shutdn",
       };
+      break;
+
     case "WALLSET":
-      var isIndex = !Number.isNaN(parseInt(action.payload)),
-        wps = 0,
-        src = "";
+      const isIndex = !Number.isNaN(parseInt(action.payload));
+      let wps = 0;
+      let src = "";
 
       if (isIndex) {
         wps = localStorage.getItem("wps");
@@ -161,14 +148,18 @@ const wallReducer = (state = defState, action) => {
         wps = walls[idx];
       }
 
-      return {
+      nextState = {
         ...state,
         wps: wps,
         src: src,
       };
+      break;
+
     default:
       return state;
   }
+
+  return nextState;
 };
 
-export default wallReducer;
+export default wallpaperReducer;

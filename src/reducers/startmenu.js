@@ -1,6 +1,6 @@
 import { pinnedApps, recentApps } from "../utils";
 
-const defState = {
+const initialState = {
   pnApps: pinnedApps,
   rcApps: recentApps,
   hide: true,
@@ -17,22 +17,12 @@ const defState = {
   ],
 };
 
-const menuReducer = (state = defState, action) => {
-  switch (action.type) {
+const menuReducer = (state = initialState, { type, payload = "A" }) => {
+  switch (type) {
     case "STARTSHW":
-      return {
-        ...state,
-        menu: true,
-        hide: false,
-        pwctrl: false,
-      };
+      return { ...state, menu: true, hide: false, pwctrl: false };
     case "STARTHID":
-      return {
-        ...state,
-        hide: true,
-        showAll: false,
-        pwctrl: false,
-      };
+      return { ...state, hide: true, showAll: false, pwctrl: false };
     case "STARTOGG":
       return {
         ...state,
@@ -41,7 +31,7 @@ const menuReducer = (state = defState, action) => {
         alpha: false,
         curAlpha: "A",
         pwctrl: false,
-        showAll: state.menu && state.showAll ? true : null,
+        showAll: state.menu && state.showAll,
       };
     case "STARTALL":
       return {
@@ -56,7 +46,7 @@ const menuReducer = (state = defState, action) => {
         ...state,
         alpha: !state.alpha,
         pwctrl: false,
-        curAlpha: action.payload || "A",
+        curAlpha: payload,
       };
     case "STARTSRC":
       return {
@@ -66,10 +56,7 @@ const menuReducer = (state = defState, action) => {
         pwctrl: false,
       };
     case "STARTPWC":
-      return {
-        ...state,
-        pwctrl: true,
-      };
+      return { ...state, pwctrl: true };
     default:
       return state;
   }

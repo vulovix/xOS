@@ -5,52 +5,45 @@ const defState = {
   hide: false,
   size: 1,
   sort: "none",
-  abOpen: false,
+  aboutOpen: false,
 };
 
+function saveAppsToLocalStorage(apps) {
+  localStorage.setItem("desktop", JSON.stringify(apps.map((app) => app.name)));
+}
+
 const deskReducer = (state = defState, action) => {
+  let arr;
+
   switch (action.type) {
     case "DESKREM":
-      var arr = state.apps.filter((x) => x.name != action.payload);
-
-      localStorage.setItem("desktop", JSON.stringify(arr.map((x) => x.name)));
+      arr = state.apps.filter((app) => app.name !== action.payload);
+      saveAppsToLocalStorage(arr);
       return { ...state, apps: arr };
+
     case "DESKADD":
-      var arr = [...state.apps];
-      arr.push(action.payload);
-
-      localStorage.setItem("desktop", JSON.stringify(arr.map((x) => x.name)));
+      arr = [...state.apps, action.payload];
+      saveAppsToLocalStorage(arr);
       return { ...state, apps: arr };
+
     case "DESKHIDE":
-      return {
-        ...state,
-        hide: true,
-      };
+      return { ...state, hide: true };
+
     case "DESKSHOW":
-      return {
-        ...state,
-        hide: false,
-      };
+      return { ...state, hide: false };
+
     case "DESKTOGG":
-      return {
-        ...state,
-        hide: !state.hide,
-      };
+      return { ...state, hide: !state.hide };
+
     case "DESKSIZE":
-      return {
-        ...state,
-        size: action.payload,
-      };
+      return { ...state, size: action.payload };
+
     case "DESKSORT":
-      return {
-        ...state,
-        sort: action.payload || "none",
-      };
+      return { ...state, sort: action.payload || "none" };
+
     case "DESKABOUT":
-      return {
-        ...state,
-        abOpen: action.payload,
-      };
+      return { ...state, aboutOpen: action.payload };
+
     default:
       return state;
   }
