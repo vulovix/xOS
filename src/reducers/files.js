@@ -53,7 +53,6 @@ const fileReducer = (state = defState, action) => {
   }
 
   tmp.cdir = tmp.hist[tmp.hid];
-  console.log(tmp);
   if (tmp.cdir.includes("%")) {
     if (tmp.data.special[tmp.cdir] != null) {
       tmp.cdir = tmp.data.special[tmp.cdir];
