@@ -403,14 +403,7 @@ const NavPane = ({}) => {
     <div className="navpane win11Scroll">
       <div className="extcont">
         <Dropdown icon="star" title="Quick access" action="" isDropped>
-          <Dropdown
-            icon="down"
-            title="Downloads"
-            spid="%downloads%"
-            notoggle
-            pinned
-          />
-          <Dropdown icon="user" title="This PC" spid="%user%" notoggle pinned />
+          <Dropdown icon="user" title="X" spid="%user%" notoggle pinned />
           <Dropdown
             icon="docs"
             title="Documents"
@@ -418,19 +411,18 @@ const NavPane = ({}) => {
             notoggle
             pinned
           />
-          <Dropdown icon="pics" title="Pictures" spid="%pictures%" notoggle />
         </Dropdown>
-        <Dropdown icon="onedrive" title="OneDrive" spid="%onedrive%" />
         <Dropdown icon="thispc" title="This PC" action="" isDropped>
           <Dropdown icon="desk" title="Desktop" spid="%desktop%" />
-          <Dropdown icon="docs" title="Documents" spid="%documents%" />
           <Dropdown icon="down" title="Downloads" spid="%downloads%" />
+          <Dropdown icon="docs" title="Documents" spid="%documents%" />
           <Dropdown icon="music" title="Music" spid="%music%" />
-          <Dropdown icon="pics" title="Pictures" spid="%pictures%" />
           <Dropdown icon="vid" title="Videos" spid="%videos%" />
-          <Dropdown icon="disc" title="OS (C:)" spid="%cdrive%" />
-          <Dropdown icon="disk" title="Blue (D:)" spid="%ddrive%" />
+          <Dropdown icon="pics" title="Pictures" spid="%pictures%" />
+          <Dropdown icon="disc" title="Local Disk (C:)" spid="%cdrive%" />
+          <Dropdown icon="disk" title="Local Disk (D:)" spid="%ddrive%" />
         </Dropdown>
+        <Dropdown icon="onedrive" title="OneDrive" spid="%onedrive%" />
       </div>
     </div>
   );
