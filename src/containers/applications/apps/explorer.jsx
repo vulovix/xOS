@@ -378,7 +378,9 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
                     onInput={(e) => setEditValue(e.currentTarget.textContent)}
                     style={{ pointerEvents: "all" }}
                   >
-                    {isEditMode && selected === item.id ? editValue : item.name}
+                    {isEditMode && selected === item.id
+                      ? editValue || item.name
+                      : item.name}
                   </span>
                 </div>
               )
@@ -416,7 +418,6 @@ const NavPane = ({}) => {
             notoggle
             pinned
           />
-          <Dropdown title="Github" spid="%github%" notoggle />
           <Dropdown icon="pics" title="Pictures" spid="%pictures%" notoggle />
         </Dropdown>
         <Dropdown icon="onedrive" title="OneDrive" spid="%onedrive%" />
