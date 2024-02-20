@@ -40,12 +40,9 @@ export const Notepad = () => {
 
   const onChange = (newValue) => {
     if (newValue !== historyRef.current[indexRef.current]) {
-      // Slice the history up to the current index, not including the future states
       historyRef.current = historyRef.current.slice(0, indexRef.current + 1);
-      // Add the new value and increment the index
       historyRef.current.push(newValue);
       indexRef.current++;
-      // setValue(newValue);
     }
 
     if (active) {
@@ -60,13 +57,6 @@ export const Notepad = () => {
     } else {
       setValue(newValue);
     }
-    // if (newValue !== historyRef.current[indexRef.current]) {
-    //   historyRef.current = [
-    //     ...historyRef.current.slice(0, indexRef.current + 1),
-    //     newValue,
-    //   ]; // Create a new copy of the history
-    //   indexRef.current++;
-    // }
   };
 
   const undo = () => {
@@ -99,25 +89,21 @@ export const Notepad = () => {
       } else {
         // There is some text selected, handle multi-line indenting
         const lines = selection.split("\n");
-        // Add a tab character to the beginning of each line
         const indentedLines = lines
           .map((line) => tabCharacter + line)
           .join("\n");
         onChange(before + indentedLines + after);
         queueMicrotask(() => {
           event.target.selectionStart = selectionStart;
-          // Set selection end to include newly added tabs
           event.target.selectionEnd = selectionStart + indentedLines.length;
         });
       }
     } else if (event.key === "Tab" && event.shiftKey) {
-      // outdent
       event.preventDefault();
     } else if ((event.ctrlKey || event.metaKey) && event.key === "z") {
       event.preventDefault();
       undo();
     } else if ((event.ctrlKey || event.metaKey) && event.key === "s") {
-      // Prevent the default save functionality
       event.preventDefault();
 
       console.log("Document is autosaved.");
