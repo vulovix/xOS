@@ -249,6 +249,11 @@ export const onInitialLoad = () => {
   }
 };
 
+export const playStartupSound = () => {
+  var audio = new Audio("/audio/startup.mp3");
+  audio.play();
+};
+
 export const preinstallApps = () => {
   const installed = JSON.parse(localStorage.getItem("installed") || "[]");
 

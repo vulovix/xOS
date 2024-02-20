@@ -8,6 +8,7 @@ import SynchronizationProviderContext from "~/providers/Synchronization/context"
 import useTaskCompletion from "~/hooks/useTaskStatusCompletion";
 import { getAuth } from "firebase/auth";
 import synchronizationApps from "~/utils/sync";
+import { playStartupSound } from "~/actions";
 
 export const Background = () => {
   const wallpaper = useSelector((state) => state.wallpaper);
@@ -95,10 +96,13 @@ export const LockScreen = (props) => {
   };
 
   const proceed = () => {
-    setUnLock(true);
+    playStartupSound();
     setTimeout(() => {
-      dispatch({ type: "WALLUNLOCK" });
-    }, 1000);
+      setUnLock(true);
+      setTimeout(() => {
+        dispatch({ type: "WALLUNLOCK" });
+      }, 1000);
+    }, 320);
   };
 
   const action2 = (e) => {
