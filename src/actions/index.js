@@ -95,15 +95,15 @@ export const changeTaskAlign = (align, menu) => {
   store.dispatch({ type: "MENUCHNG", payload: tmpMenu });
 };
 
-export const performApp = (act, menu) => {
+export const performApp = (action, menu) => {
   var data = {
     type: menu.dataset.action,
     payload: menu.dataset.payload,
   };
 
-  if (act == "open") {
+  if (action == "open") {
     if (data.type) store.dispatch(data);
-  } else if (act == "delshort") {
+  } else if (action == "delshort") {
     if (data.type) {
       var apps = store.getState().apps;
       var app = Object.keys(apps).filter(
@@ -120,13 +120,13 @@ export const performApp = (act, menu) => {
   }
 };
 
-export const delApp = (act, menu) => {
+export const delApp = (action, menu) => {
   var data = {
     type: menu.dataset.action,
     payload: menu.dataset.payload,
   };
 
-  if (act == "delete") {
+  if (action == "delete") {
     if (data.type) {
       var apps = store.getState().apps;
       var app = Object.keys(apps).filter((x) => apps[x].action == data.type);
@@ -242,24 +242,9 @@ const loadWidget = async () => {
   });
 };
 
-export const loadSettings = () => {
-  var sett = localStorage.getItem("setting") || "{}";
-  sett = JSON.parse(sett);
-
-  if (sett.person == null) {
-    sett = JSON.parse(JSON.stringify(store.getState().setting));
-    if (
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches
-    ) {
-      sett.person.theme = "dark";
-    }
-  }
-
-  if (sett.person.theme != "light") changeTheme();
-
-  store.dispatch({ type: "SETTLOAD", payload: sett });
-  if (import.meta.env.MODE != "development") {
+export const onInitialLoad = () => {
+  preinstallApps();
+  if (import.meta.env.MODE !== "development") {
     loadWidget();
   }
 };
@@ -322,6 +307,8 @@ export const preinstallApps = () => {
         availableToInstall.map((x) => x.name).join(", "),
         "."
       );
+    } else {
+      console.log("All default apps are already installed.");
     }
   }
 };

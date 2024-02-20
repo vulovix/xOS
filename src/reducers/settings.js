@@ -1,4 +1,10 @@
-const initialState = {
+const storageState = localStorage.getItem("setting");
+
+const isDarkPreffered =
+  window.matchMedia &&
+  window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+const defaultInitialState = {
   system: {
     power: {
       saver: {
@@ -16,7 +22,7 @@ const initialState = {
   },
   person: {
     name: "X",
-    theme: "light",
+    theme: isDarkPreffered ? "dark" : "light",
     color: "blue",
   },
   devices: {
@@ -34,6 +40,10 @@ const initialState = {
     },
   },
 };
+
+const initialState = storageState
+  ? JSON.parse(storageState) || defaultInitialState
+  : defaultInitialState;
 
 document.body.dataset.theme = initialState.person.theme;
 

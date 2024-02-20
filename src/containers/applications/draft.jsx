@@ -5,30 +5,30 @@ import CommunicationProviderContext from "../../providers/Communication/context"
 
 export const IFrame = (props) => {
   const { onIFrameLoad } = useContext(CommunicationProviderContext);
-  const wnapp = useSelector((state) => state.apps[props.icon]);
-  if (!wnapp) return null;
-  var data = wnapp.data;
+  const app = useSelector((state) => state.apps[props.icon]);
+  if (!app) return null;
+  var data = app.data;
 
-  return wnapp.hide ? null : (
+  return app.hide ? null : (
     <div
-      data-size={wnapp.size}
+      data-size={app.size}
       className={
         "floatTab dpShad " +
         (data.invert != true ? "lightWindow" : "darkWindow")
       }
-      data-max={wnapp.max}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size == "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
-      id={wnapp.icon + "App"}
+      data-hide={app.hide}
+      id={app.icon + "App"}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
-        name={wnapp.name}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
+        name={app.name}
         invert={data.invert == true ? true : null}
         noinvert
       />

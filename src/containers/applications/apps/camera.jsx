@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Icon, ToolBar } from "../../../utils/general";
+import { useSelector } from "react-redux";
+import { Icon, ToolBar } from "~/utils/general";
 import { useTranslation } from "react-i18next";
 
 export const Camera = () => {
-  const wnapp = useSelector((state) => state.apps.camera);
+  const app = useSelector((state) => state.apps.camera);
   const hide = useSelector((state) => state.apps.camera.hide);
   const [stream, setStream] = useState(null);
   const { t } = useTranslation();
 
   const capture = () => {
-    var video = document.querySelector("video");
-    var canvas = document.querySelector("canvas");
+    let video = document.querySelector("video");
+    let canvas = document.querySelector("canvas");
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
-    var df = video.videoWidth - video.videoHeight;
+    let df = video.videoWidth - video.videoHeight;
 
     canvas
       .getContext("2d")
@@ -23,14 +23,14 @@ export const Camera = () => {
   };
 
   useEffect(() => {
-    if (!wnapp.hide) {
-      var video = document.getElementById("camvideo");
+    if (!app.hide) {
+      let video = document.getElementById("camvideo");
 
       video.setAttribute("playsinline", "");
       video.setAttribute("autoplay", "");
       video.setAttribute("muted", "");
 
-      var constraints = {
+      let constraints = {
         audio: false,
         video: true,
       };
@@ -49,19 +49,19 @@ export const Camera = () => {
   return (
     <div
       className="wnCam floatTab dpShad"
-      data-size={wnapp.size}
-      id={wnapp.icon + "App"}
-      data-max={wnapp.max}
+      data-size={app.size}
+      id={app.icon + "App"}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size == "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
+      data-hide={app.hide}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
         name="Camera"
         invert
         bg="#060606"

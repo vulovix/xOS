@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Icon, LazyComponent } from "../../utils/general";
 import "./widget.scss";
 
-export const WidPane = () => {
+export const WidgetsPanel = () => {
   const dispatch = useDispatch();
   const widget = useSelector((state) => state.widpane);
   const theme = useSelector((state) => state.setting.person.theme);

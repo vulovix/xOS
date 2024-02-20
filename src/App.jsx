@@ -6,12 +6,12 @@ import "./index.css";
 
 import ActionMenu from "./components/menu";
 import {
-  BandPane,
-  CalnWid,
+  BandPanel,
+  Calendar,
   DesktopApp,
-  SidePane,
+  SidePanel,
   StartMenu,
-  WidPane,
+  WidgetsPanel,
 } from "./components/start";
 import Taskbar from "./components/taskbar";
 import {
@@ -23,7 +23,7 @@ import {
   BackupScreen,
 } from "./containers/background";
 
-import { loadSettings, preinstallApps } from "./actions";
+import { onInitialLoad } from "./actions";
 import * as Applications from "./containers/applications";
 import * as Drafts from "./containers/applications/draft";
 
@@ -73,11 +73,11 @@ function ErrorFallback({ error, resetErrorBoundary }) {
 }
 
 function App() {
-  const apps = useSelector((state) => state.apps);
-  const wall = useSelector((state) => state.wallpaper);
   const dispatch = useDispatch();
+  const apps = useSelector((state) => state.apps);
+  const wallpaper = useSelector((state) => state.wallpaper);
 
-  const afterMath = (event) => {
+  const onGlobalClick = (event) => {
     var ess = [
       ["START", "STARTHID"],
       ["BAND", "BANDHIDE"],
@@ -105,10 +105,9 @@ function App() {
     });
   };
 
-  window.oncontextmenu = (e) => {
-    afterMath(e);
+  const onContextMenu = (e) => {
+    onGlobalClick(e);
     e.preventDefault();
-    // dispatch({ type: 'GARBAGE'});
     var data = {
       top: e.clientY,
       left: e.clientX,
@@ -125,31 +124,21 @@ function App() {
     }
   };
 
-  window.onclick = afterMath;
-
-  window.onload = (e) => {
-    dispatch({ type: "WALLBOOTED" });
-  };
-
   useEffect(() => {
-    if (!window.onstart) {
-      loadSettings();
-      preinstallApps();
-      window.onstart = setTimeout(() => {
-        // console.log("prematurely loading ( ﾉ ﾟｰﾟ)ﾉ");
-        dispatch({ type: "WALLBOOTED" });
-      }, 5000);
-    }
-  });
+    onInitialLoad();
+    window.onclick = onGlobalClick;
+    window.oncontextmenu = onContextMenu;
+    dispatch({ type: "WALLBOOTED" });
+  }, []);
 
   return (
     <div className="App">
       <ErrorBoundary FallbackComponent={ErrorFallback}>
-        {wall.backup ? <BackupScreen dir={wall.dir} /> : null}
-        {wall.sync ? <SyncScreen dir={wall.dir} /> : null}
-        {wall.update ? <UpdateScreen dir={wall.dir} /> : null}
-        {!wall.booted ? <BootScreen dir={wall.dir} /> : null}
-        {wall.locked ? <LockScreen dir={wall.dir} /> : null}
+        {wallpaper.backup ? <BackupScreen dir={wallpaper.dir} /> : null}
+        {wallpaper.sync ? <SyncScreen dir={wallpaper.dir} /> : null}
+        {wallpaper.update ? <UpdateScreen dir={wallpaper.dir} /> : null}
+        {!wallpaper.booted ? <BootScreen dir={wallpaper.dir} /> : null}
+        {wallpaper.locked ? <LockScreen dir={wallpaper.dir} /> : null}
         <div className="appwrap">
           <Background />
           <div className="desktop" data-menu="desk">
@@ -168,10 +157,10 @@ function App() {
                 }
               })}
             <StartMenu />
-            <BandPane />
-            <SidePane />
-            <WidPane />
-            <CalnWid />
+            <BandPanel />
+            <SidePanel />
+            <WidgetsPanel />
+            <Calendar />
           </div>
           <Taskbar />
           <ActionMenu />

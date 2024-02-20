@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Icon, ToolBar } from "../../../utils/general";
+import { Icon, ToolBar } from "~/utils/general";
 import countries from "./assets/countrylist.json";
 import "./assets/getstarted.scss";
 import { useState } from "react";
@@ -8,13 +8,14 @@ import LangSwitch from "./assets/Langswitch";
 import { useTranslation } from "react-i18next";
 
 export const Getstarted = () => {
-  const wnapp = useSelector((state) => state.apps.getstarted);
+  const app = useSelector((state) => state.apps.getstarted);
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.taskbar);
   const { t } = useTranslation();
 
-  const [pageNo, setPageNo] = useState(1);
-  const nextPage = () => (pageNo !== 6 ? setPageNo(pageNo + 1) : null);
+  const [pageNumber, setPageNumber] = useState(1);
+  const nextPage = () =>
+    pageNumber !== 6 ? setPageNumber(pageNumber + 1) : null;
 
   const changUserName = (e) => {
     var newName = e.target.value;
@@ -30,26 +31,26 @@ export const Getstarted = () => {
   return (
     <div
       className="getstarted floatTab dpShad"
-      data-size={wnapp.size}
-      data-max={wnapp.max}
-      style={{ ...(wnapp.size == "cstm" ? wnapp.dim : null), zIndex: wnapp.z }}
-      data-hide={wnapp.hide}
-      id={wnapp.icon + "App"}
+      data-size={app.size}
+      data-max={app.max}
+      style={{ ...(app.size === "cstm" ? app.dim : null), zIndex: app.z }}
+      data-hide={app.hide}
+      id={app.icon + "App"}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
         name="Get Started"
       />
       <div className="windowScreen flex flex-col" data-dock="true">
         <div className="restWindow flex-grow flex flex-col">
           <div className="inner_fill_setup">
-            {pageNo === 1 ? (
+            {pageNumber === 1 ? (
               <>
                 <div className="left">
                   <img
-                    alt="left image"
+                    alt="region"
                     id="left_img"
                     src="img/oobe/window11_oobe_region.png"
                   />
@@ -72,10 +73,11 @@ export const Getstarted = () => {
                 </div>
               </>
             ) : null}
-            {pageNo === 2 ? (
+            {pageNumber === 2 ? (
               <>
                 <div className="left">
                   <img
+                    alt="layout"
                     id="left_img"
                     src="img/oobe/window11_oobe_keyb_layout.png"
                   />
@@ -93,21 +95,33 @@ export const Getstarted = () => {
                 </div>
               </>
             ) : null}
-            {pageNo === 3 ? (
+            {pageNumber === 3 ? (
               <>
                 <div className="left">
-                  <img id="left_img" src="img/oobe/window11_oobe_update.png" />
+                  <img
+                    alt="update"
+                    id="left_img"
+                    src="img/oobe/window11_oobe_update.png"
+                  />
                 </div>
                 <div className="right align">
-                  <img id="loader" src="img/oobe/window11_oobe_region.png" />
+                  <img
+                    alt="region"
+                    id="loader"
+                    src="img/oobe/window11_oobe_region.png"
+                  />
                   Checking for updates.
                 </div>
               </>
             ) : null}
-            {pageNo === 4 ? (
+            {pageNumber === 4 ? (
               <>
                 <div className="left">
-                  <img id="left_img" src="img/oobe/window11_oobe_name.png" />
+                  <img
+                    alt="name"
+                    id="left_img"
+                    src="img/oobe/window11_oobe_name.png"
+                  />
                 </div>
                 <div className="right">
                   <div className="header mb-2">Let's name your PC</div>
@@ -133,10 +147,14 @@ export const Getstarted = () => {
                 </div>
               </>
             ) : null}
-            {pageNo === 5 ? (
+            {pageNumber === 5 ? (
               <>
                 <div className="left">
-                  <img id="left_img" src="img/oobe/window11_oobe_wifi.png" />
+                  <img
+                    alt="network"
+                    id="left_img"
+                    src="img/oobe/window11_oobe_wifi.png"
+                  />
                 </div>
                 <div className="right">
                   <div className="header">
@@ -168,10 +186,14 @@ export const Getstarted = () => {
                 </div>
               </>
             ) : null}
-            {pageNo === 6 ? (
+            {pageNumber === 6 ? (
               <>
                 <div className="left">
-                  <img id="left_img" src="img/oobe/window11_oobe_update.png" />
+                  <img
+                    alt="update"
+                    id="left_img"
+                    src="img/oobe/window11_oobe_update.png"
+                  />
                 </div>
                 <div className="right">
                   <div className="header mb-8">The setup has completed.</div>

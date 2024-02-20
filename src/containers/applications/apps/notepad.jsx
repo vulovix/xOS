@@ -3,28 +3,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { ToolBar } from "../../../utils/general";
 
 export const Notepad = () => {
-  const wnapp = useSelector((state) => state.apps.notepad);
+  const app = useSelector((state) => state.apps.notepad);
   const files = useSelector((state) => state.files);
 
   const dispatch = useDispatch();
 
   const [value, setValue] = useState("");
+  const [fileName, setFileName] = useState("");
 
   const { active } = files;
+
+  const resetState = () => {
+    setValue("");
+    setFileName("");
+  };
 
   useEffect(() => {
     if (active) {
       const item = files.data.getId(active);
+      setFileName(item.name);
       setValue(item.data.content.value);
     }
   }, [active]);
 
   useEffect(() => {
-    if (wnapp.hide) {
+    if (app.hide) {
       dispatch({ type: "FILECLOSE" });
-      setValue("");
+      resetState();
     }
-  }, [wnapp.hide]);
+  }, [app.hide]);
 
   const onChange = (e) => {
     if (active) {
@@ -44,20 +51,20 @@ export const Notepad = () => {
   return (
     <div
       className="notepad floatTab dpShad"
-      data-size={wnapp.size}
-      data-max={wnapp.max}
+      data-size={app.size}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size == "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
-      id={wnapp.icon + "App"}
+      data-hide={app.hide}
+      id={app.icon + "App"}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
-        name="Untitled - Notepad"
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
+        name={(fileName || "Untitled") + " - Notepad"}
       />
       <div className="windowScreen flex flex-col" data-dock="true">
         <div className="flex text-xs py-2 topBar">
@@ -70,6 +77,7 @@ export const Notepad = () => {
             <textarea
               id="textpad"
               value={value}
+              spellCheck="false"
               onChange={onChange}
               className="noteText win11Scroll"
             />

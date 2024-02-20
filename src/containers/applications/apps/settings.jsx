@@ -7,11 +7,11 @@ import "./assets/settings.scss";
 import data from "./assets/settingsData.json";
 
 export const Settings = () => {
-  const wnapp = useSelector((state) => state.apps.settings);
+  const app = useSelector((state) => state.apps.settings);
   const theme = useSelector((state) => state.setting.person.theme);
   const dispatch = useDispatch();
 
-  const wall = useSelector((state) => state.wallpaper);
+  const wallpaper = useSelector((state) => state.wallpaper);
 
   const [page, setPage] = useState("System"); // default System
   const [nav, setNav] = useState("");
@@ -23,8 +23,8 @@ export const Settings = () => {
     dark: "dark",
     ThemeA: "dark",
     ThemeB: "dark",
-    ThemeD: "light",
-    ThemeC: "light",
+    ThemeD: "dark",
+    ThemeC: "dark",
   };
 
   const handleWallAndTheme = (e) => {
@@ -32,7 +32,7 @@ export const Settings = () => {
     var theme_nxt = themechecker[payload.split("/")[0]],
       src = payload;
 
-    if (theme_nxt != theme) {
+    if (theme_nxt !== theme) {
       changeTheme();
     }
 
@@ -47,19 +47,19 @@ export const Settings = () => {
   return (
     <div
       className="settingsApp floatTab dpShad"
-      data-size={wnapp.size}
-      data-max={wnapp.max}
+      data-size={app.size}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size == "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
-      id={wnapp.icon + "App"}
+      data-hide={app.hide}
+      id={app.icon + "App"}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
         name="Settings"
       />
       <div className="windowScreen flex flex-col" data-dock="true">
@@ -123,7 +123,7 @@ export const Settings = () => {
                             <div key={i} className={e.type}>
                               <div className="left">
                                 <img
-                                  src={`img/wallpaper/${wall.src}`}
+                                  src={`img/wallpaper/${wallpaper.src}`}
                                   alt=""
                                   className="device_img"
                                 />
@@ -206,18 +206,20 @@ export const Settings = () => {
                             <div key={i} className="personaliseTop">
                               <img
                                 className="mainImg"
-                                src={`img/wallpaper/${wall.src}`}
+                                src={`img/wallpaper/${wallpaper.src}`}
                                 alt=""
                               />
                               <div>
                                 <h3>Select a theme to apply</h3>
                                 <div className="bgBox">
-                                  {wall.themes.map((e, i) => {
+                                  {wallpaper.themes.map((e, i) => {
                                     return (
                                       <Image
                                         key={i}
                                         className={
-                                          wall.src.includes(e) ? "selected" : ""
+                                          wallpaper.src.includes(e)
+                                            ? "selected"
+                                            : ""
                                         }
                                         src={`img/wallpaper/${e}/img0.jpg`}
                                         ext

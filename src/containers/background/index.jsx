@@ -10,14 +10,13 @@ import { getAuth } from "firebase/auth";
 import synchronizationApps from "~/utils/sync";
 
 export const Background = () => {
-  const wall = useSelector((state) => state.wallpaper);
-  const dispatch = useDispatch();
+  const wallpaper = useSelector((state) => state.wallpaper);
 
   return (
     <div
       className="background"
       style={{
-        backgroundImage: `url(img/wallpaper/${wall.src})`,
+        backgroundImage: `url(img/wallpaper/${wallpaper.src})`,
       }}
     ></div>
   );
@@ -204,19 +203,19 @@ export const UpdateScreen = (props) => {
 
   return (
     <div className={`update-screen ${props.dir === -1 ? "slowfadein" : ""}`}>
-      <div class="update">
-        <div class="update__content_wrapper">
+      <div className="update">
+        <div className="update__content_wrapper">
           <div className="bumper" />
           <div className="update__content">
             <Loader />
 
-            <div class="update__text header">
+            <div className="update__text header">
               <p id="update__percentage">You're {percent}% there.</p>
               <p>Please keep your computer on.</p>
             </div>
           </div>
 
-          <div class="update__text footer">
+          <div className="update__text footer">
             <p>Your computer might restart few times.</p>
           </div>
         </div>

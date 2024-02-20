@@ -6,7 +6,7 @@ import CanvasDraw from "@win11react/react-canvas-draw";
 import { Mark } from "./assets";
 
 export const WhiteBoard = () => {
-  const wnapp = useSelector((state) => state.apps.board);
+  const app = useSelector((state) => state.apps.board);
   const [color, setColor] = useState("#222222");
   const [radii, setRadii] = useState(4);
   const [eraze, setErz] = useState(false);
@@ -42,19 +42,19 @@ export const WhiteBoard = () => {
   return (
     <div
       className="whiteBoard floatTab dpShad"
-      data-size={wnapp.size}
-      data-max={wnapp.max}
+      data-size={app.size}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size == "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
-      id={wnapp.icon + "App"}
+      data-hide={app.hide}
+      id={app.icon + "App"}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
         name="Whiteboard"
         bg="#f9f9f9"
         noinvert
@@ -104,7 +104,7 @@ export const WhiteBoard = () => {
             </div>
           </div>
           <div className="canvaCont">
-            {!wnapp.hide && !reset ? (
+            {!app.hide && !reset ? (
               <CanvasDraw
                 id="drawingArea"
                 brushColor={eraze ? "#fff" : color}

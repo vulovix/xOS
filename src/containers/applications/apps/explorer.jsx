@@ -5,7 +5,7 @@ import { dispatchAction, handleFileOpen } from "../../../actions";
 import "./assets/fileexpo.scss";
 
 const NavTitle = (props) => {
-  var src = props.icon || "folder";
+  const src = props.icon || "folder";
 
   return (
     <div
@@ -51,7 +51,7 @@ const FolderDrop = ({ dir }) => {
 const Dropdown = (props) => {
   const [open, setOpen] = useState(props.isDropped != null);
   const special = useSelector((state) => state.files.data.special);
-  const [fid, setFID] = useState(() => {
+  const [folderID] = useState(() => {
     if (props.spid) return special[props.spid];
     else return props.dir;
   });
@@ -75,8 +75,8 @@ const Dropdown = (props) => {
           icon={props.icon}
           title={props.title}
           isize={props.isize}
-          action={props.action != "" ? props.action || "FILEDIR" : null}
-          payload={fid}
+          action={props.action !== "" ? props.action || "FILEDIR" : null}
+          payload={folderID}
         />
         {props.pinned != null ? (
           <Icon className="pinUi" src="win/pinned" width={16} />
@@ -85,7 +85,7 @@ const Dropdown = (props) => {
       {!props.notoggle ? (
         <div className="dropcontent">
           {open ? props.children : null}
-          {open && fid != null ? <FolderDrop dir={fid} /> : null}
+          {open && folderID != null ? <FolderDrop dir={folderID} /> : null}
         </div>
       ) : null}
     </div>
@@ -94,45 +94,43 @@ const Dropdown = (props) => {
 
 export const Explorer = () => {
   const [selected, setSelect] = useState(null);
-  const apps = useSelector((state) => state.apps);
-  const wnapp = useSelector((state) => state.apps.explorer);
+  const app = useSelector((state) => state.apps.explorer);
   const files = useSelector((state) => state.files);
-  const fdata = files.data.getId(files.cdir);
-  const [cpath, setPath] = useState(files.cpath);
-  const [searchtxt, setShText] = useState("");
+  const folderData = files.data.getId(files.cdir);
+  const [directoryPath, setDirectoryPath] = useState(files.cpath);
+  const [searchText, setSearchText] = useState("");
   const dispatch = useDispatch();
 
-  const handleChange = (e) => setPath(e.target.value);
-  const handleSearchChange = (e) => setShText(e.target.value);
+  const handleChange = (e) => setDirectoryPath(e.target.value);
+  const handleSearchChange = (e) => setSearchText(e.target.value);
 
   const handleEnter = (e) => {
     if (e.key === "Enter") {
-      dispatch({ type: "FILEPATH", payload: cpath });
+      dispatch({ type: "FILEPATH", payload: directoryPath });
     }
   };
 
   const onAddFile = () => {
     const fileName = `File ${new Date().getTime()}`;
-    files.data.addByPath(cpath, {
+    files.data.addByPath(directoryPath, {
       type: "file",
       name: fileName,
       info: { icon: "file" },
-      data: { content: { value: "New File" } },
+      data: { content: { value: "Hello World!" } },
     });
   };
 
   const onAddFolder = () => {
     const name = `Folder ${new Date().getTime()}`;
-    files.data.addByPath(cpath, {
+    files.data.addByPath(directoryPath, {
       type: "folder",
       name: name,
     });
-    // dispatch({ type: "FILEPATH", payload: cpath });
   };
 
   const onUpdate = (itemId, itemValue) => {
     files.data.updateItem(itemId, {
-      name: itemValue, // "Updated Name " + new Date().getTime(),
+      name: itemValue,
     });
   };
   const onRemove = () => {
@@ -141,7 +139,7 @@ export const Explorer = () => {
 
   const DirCont = () => {
     var arr = [],
-      curr = fdata,
+      curr = folderData,
       index = 0;
 
     while (curr) {
@@ -176,7 +174,7 @@ export const Explorer = () => {
       <div key={index++} className="dirCont flex items-center">
         <Icon
           className="pr-1 pb-px"
-          src={"win/" + fdata.info.icon + "-sm"}
+          src={"win/" + folderData.info.icon + "-sm"}
           width={16}
         />
         <Icon className="dirchev" fafa="faChevronRight" width={8} />
@@ -191,26 +189,26 @@ export const Explorer = () => {
   };
 
   useEffect(() => {
-    setPath(files.cpath);
-    setShText("");
+    setDirectoryPath(files.cpath);
+    setSearchText("");
   }, [files.cpath]);
 
   return (
     <div
       className="msfiles floatTab dpShad"
-      data-size={wnapp.size}
-      data-max={wnapp.max}
+      data-size={app.size}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size === "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
-      id={wnapp.icon + "App"}
+      data-hide={app.hide}
+      id={app.icon + "App"}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
         name="File Explorer"
       />
       <div className="windowScreen flex flex-col">
@@ -252,7 +250,7 @@ export const Explorer = () => {
               <input
                 className="path-field"
                 type="text"
-                value={cpath}
+                value={directoryPath}
                 onChange={handleChange}
                 onKeyDown={handleEnter}
               />
@@ -263,7 +261,7 @@ export const Explorer = () => {
               <input
                 type="text"
                 onChange={handleSearchChange}
-                value={searchtxt}
+                value={searchText}
                 placeholder="Search"
               />
             </div>
@@ -271,14 +269,16 @@ export const Explorer = () => {
           <div className="sec2">
             <NavPane />
             <ContentArea
-              searchtxt={searchtxt}
+              searchtxt={searchText}
               onUpdate={onUpdate}
               selected={selected}
               setSelect={setSelect}
             />
           </div>
           <div className="sec3">
-            <div className="item-count text-xs">{fdata.data?.length} items</div>
+            <div className="item-count text-xs">
+              {folderData.data?.length} items
+            </div>
             <div className="view-opts flex">
               <Icon
                 className="viewicon hvtheme p-1"
@@ -351,7 +351,7 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
         <div className="gridshow" data-size="lg">
           {fdata.data?.map((item, i) => {
             return (
-              item.name.includes(searchtxt) && (
+              item.name.toLowerCase().includes(searchtxt.toLowerCase()) && (
                 <div
                   key={i}
                   className="conticon hvtheme flex flex-col items-center prtclk"

@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { Icon, ToolBar } from "../../../utils/general";
+import { Icon, ToolBar } from "~/utils/general";
 
 export const Calculator = () => {
-  const wnapp = useSelector((state) => state.apps.calculator);
-  const [equa, setEqua] = useState([]);
-  const [cval, setCval] = useState("0");
-  const [err, setErr] = useState(null);
-  const [hist, setHist] = useState([]);
+  const app = useSelector((state) => state.apps.calculator);
+  const [equasion, setEquasion] = useState([]);
+  const [displayValue, setDisplayValue] = useState("0");
+  const [error, setError] = useState(null);
+  const [history, setHistory] = useState([]);
 
   const getIdx = (node) => {
-    var i = 0;
+    let i = 0;
     while ((node = node.previousSibling) != null) {
       i++;
     }
@@ -19,117 +19,118 @@ export const Calculator = () => {
   };
 
   const action = (event) => {
-    var btn = event.target.dataset.ch,
-      idx = getIdx(event.target);
+    const button = event.target.dataset.ch;
+    const index = getIdx(event.target);
 
-    var val = cval;
-    if (idx == 2) {
-      setCval("0");
-      setEqua([]);
-      setErr(null);
+    var val = displayValue;
+    if (index == 2) {
+      setDisplayValue("0");
+      setEquasion([]);
+      setError(null);
     } else if (val == "Infinity" || val == "NaN") {
-      setErr(val);
-    } else if (idx == 1) {
-      setCval("0");
-    } else if (idx == 3) {
+      setError(val);
+    } else if (index == 1) {
+      setDisplayValue("0");
+    } else if (index == 3) {
       val = val.substring(0, val.length - 1);
       if (val.length == 0 || val == "-") val = "0";
-      setCval(val);
-    } else if (idx < 7 && idx > 3) {
-      if (btn == "inv") {
+      setDisplayValue(val);
+    } else if (index < 7 && index > 3) {
+      if (button == "inv") {
         var num = parseFloat(val);
 
         if (num != 0) {
           var inv = 1 / num;
         } else {
-          setErr("Cannot divide by zero");
+          setError("Cannot divide by zero");
           return;
         }
-        setCval(inv.toString());
-      } else if (btn == "sq") {
+        setDisplayValue(inv.toString());
+      } else if (button == "sq") {
         var num = parseFloat(val),
           sq = num ** 2;
-        setCval(sq.toString());
-      } else if (btn == "sqrt") {
+        setDisplayValue(sq.toString());
+      } else if (button == "sqrt") {
         var num = parseFloat(val);
         if (val[0] != "-") {
           var sqrt = Math.sqrt(num);
         } else {
-          setErr("Invalid Input");
+          setError("Invalid Input");
           return;
         }
-        setCval(sqrt.toString());
+        setDisplayValue(sqrt.toString());
       }
-    } else if (idx > 7 && (idx + 1) % 4 != 0) {
-      if (btn.length == 1) {
-        var tpq = [...equa];
+    } else if (index > 7 && (index + 1) % 4 != 0) {
+      if (button.length == 1) {
+        let temporaryEquasion = [...equasion];
 
-        if (tpq[3] != null) {
-          if (btn == ".") {
+        if (temporaryEquasion[3] != null) {
+          if (button == ".") {
             val = "0";
           } else {
             val = "";
           }
 
-          setEqua([]);
+          setEquasion([]);
         }
 
-        val += btn;
-        if (cval == "0" && btn != ".") {
-          val = btn;
+        val += button;
+        if (displayValue == "0" && button != ".") {
+          val = button;
         }
 
         if (val.length < 17 && val.match(/^-?[0-9]+([.][0-9]*)?$/) != null) {
-          setCval(val);
+          setDisplayValue(val);
         }
-      } else if (cval != "0") {
-        if (cval[0] == "-") {
-          setCval(cval.substring(1));
+      } else if (displayValue != "0") {
+        if (displayValue[0] == "-") {
+          setDisplayValue(displayValue.substring(1));
         } else {
-          setCval("-" + cval);
+          setDisplayValue("-" + displayValue);
         }
       }
-    } else if (idx > 3 && idx % 4 == 3) {
-      var tpq = [...equa];
-      if (btn != "=") {
-        if (tpq[2] == null) {
-          if (tpq[0] == null) {
-            tpq[0] = parseFloat(cval);
+    } else if (index > 3 && index % 4 == 3) {
+      let temporaryEquasion = [...equasion];
+      if (button != "=") {
+        if (temporaryEquasion[2] == null) {
+          if (temporaryEquasion[0] == null) {
+            temporaryEquasion[0] = parseFloat(displayValue);
           }
-          tpq[1] = btn;
+          temporaryEquasion[1] = button;
         } else {
-          tpq = [cval, btn];
+          temporaryEquasion = [displayValue, button];
         }
 
-        setCval("0");
-        setEqua(tpq);
+        setDisplayValue("0");
+        setEquasion(temporaryEquasion);
       } else {
-        if (tpq[1] != null) {
-          if (tpq[2] == null) {
-            tpq[2] = parseFloat(cval);
+        if (temporaryEquasion[1] != null) {
+          if (temporaryEquasion[2] == null) {
+            temporaryEquasion[2] = parseFloat(displayValue);
           }
 
-          tpq[3] = "=";
-          if (tpq[1] == "/") {
-            if (tpq[2] != 0) {
-              tpq[4] = tpq[0] / tpq[2];
+          temporaryEquasion[3] = "=";
+          if (temporaryEquasion[1] == "/") {
+            if (temporaryEquasion[2] != 0) {
+              temporaryEquasion[4] =
+                temporaryEquasion[0] / temporaryEquasion[2];
             } else {
-              setErr("Cannot divide by zero");
+              setError("Cannot divide by zero");
               return;
             }
-          } else if (tpq[1] == "x") {
-            tpq[4] = tpq[0] * tpq[2];
-          } else if (tpq[1] == "-") {
-            tpq[4] = tpq[0] - tpq[2];
+          } else if (temporaryEquasion[1] == "x") {
+            temporaryEquasion[4] = temporaryEquasion[0] * temporaryEquasion[2];
+          } else if (temporaryEquasion[1] == "-") {
+            temporaryEquasion[4] = temporaryEquasion[0] - temporaryEquasion[2];
           } else {
-            tpq[4] = tpq[0] + tpq[2];
+            temporaryEquasion[4] = temporaryEquasion[0] + temporaryEquasion[2];
           }
 
-          var tmpHist = [...hist];
-          setEqua(tpq);
-          setCval(tpq[4]);
-          tmpHist.push(tpq);
-          setHist(tmpHist);
+          let temporaryHistory = [...history];
+          setEquasion(temporaryEquasion);
+          setDisplayValue(temporaryEquasion[4]);
+          temporaryHistory.push(temporaryEquasion);
+          setHistory(temporaryHistory);
         }
       }
     }
@@ -138,19 +139,19 @@ export const Calculator = () => {
   return (
     <div
       className="calcApp floatTab dpShad"
-      data-size={wnapp.size}
-      id={wnapp.icon + "App"}
-      data-max={wnapp.max}
+      data-size={app.size}
+      id={app.icon + "App"}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size == "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
+      data-hide={app.hide}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
         name="Calculator"
       />
       <div className="windowScreen flex flex-col" data-dock="true">
@@ -164,9 +165,12 @@ export const Calculator = () => {
           <div className="w-full flex-grow flex flex-col relative">
             <div className="valCont w-full">
               <div className="eqCont">
-                {equa[0]} {equa[1]} {equa[2]} {equa[3]} {equa[4]}
+                {equasion[0]} {equasion[1]} {equasion[2]} {equasion[3]}{" "}
+                {equasion[4]}
               </div>
-              <div className="vlcCont">{err == null ? cval : err}</div>
+              <div className="vlcCont">
+                {error == null ? displayValue : error}
+              </div>
             </div>
             <div className="msrVal">
               <div>MC</div>
@@ -175,7 +179,7 @@ export const Calculator = () => {
               <div>M-</div>
               <div>MS</div>
             </div>
-            <div className="opcont" data-err={err != null}>
+            <div className="opcont" data-err={error != null}>
               <div onClick={action} className="oper" data-ch="%">
                 %
               </div>
@@ -253,12 +257,12 @@ export const Calculator = () => {
           </div>
           <div className="calcHis flex flex-col">
             <div className="text-sm font-semibold">History</div>
-            {hist.length != 0 ? null : (
+            {history.length != 0 ? null : (
               <div className="text-xs mt-4">There's no history yet</div>
             )}
             <div className="histCont win11Scroll">
               <div className="hct h-max flex-grow">
-                {hist.map((his) => {
+                {history.map((his) => {
                   return (
                     <div className="flex flex-col items-end mb-6 text-gray-500">
                       {his[0]} {his[1]} {his[2]} {his[3]}

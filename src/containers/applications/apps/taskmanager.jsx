@@ -4,7 +4,7 @@ import { ToolBar } from "../../../utils/general";
 import { Icon } from "../../../utils/general";
 import "./assets/taskmanager.scss";
 
-import apps from "../../../utils/apps";
+import apps from "~/utils/apps";
 
 let appList = [];
 
@@ -13,7 +13,7 @@ apps.map((e) => {
 });
 
 export const Taskmanager = () => {
-  const wnapp = useSelector((state) => state.apps.taskmanager);
+  const app = useSelector((state) => state.apps.taskmanager);
 
   const [tab, setTab] = useState("Processes");
   const [nav, setNav] = useState("open");
@@ -34,19 +34,19 @@ export const Taskmanager = () => {
   return (
     <div
       className="taskmanagerApp floatTab dpShad"
-      data-size={wnapp.size}
-      data-max={wnapp.max}
+      data-size={app.size}
+      data-max={app.max}
       style={{
-        ...(wnapp.size == "cstm" ? wnapp.dim : null),
-        zIndex: wnapp.z,
+        ...(app.size == "cstm" ? app.dim : null),
+        zIndex: app.z,
       }}
-      data-hide={wnapp.hide}
-      id={wnapp.icon + "App"}
+      data-hide={app.hide}
+      id={app.icon + "App"}
     >
       <ToolBar
-        app={wnapp.action}
-        icon={wnapp.icon}
-        size={wnapp.size}
+        app={app.action}
+        icon={app.icon}
+        size={app.size}
         name="Task Manager"
       />
       <div className="windowScreen flex flex-col" data-dock="true">
@@ -99,7 +99,7 @@ export const Taskmanager = () => {
                                   {
                                     powerUsage[
                                       Math.floor(
-                                        Math.random() * powerUsage.length,
+                                        Math.random() * powerUsage.length
                                       )
                                     ]
                                   }

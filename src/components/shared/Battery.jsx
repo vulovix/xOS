@@ -2,15 +2,17 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./battery.scss";
 
-const Battery = ({ pct, invert }) => {
+const Battery = ({ showPercentage, invert }) => {
   // var divtitle = "Battery status: " + level + "% " + (charging ? "available (plugged in)" : "remaining");
 
   const dispatch = useDispatch();
-  const btLevel = useSelector((state) => state.setting.system.power.battery);
+  const batteryLevel = useSelector(
+    (state) => state.setting.system.power.battery
+  );
 
-  const updateBatteryStatus = (bt) => {
-    let level = bt.level * 100 || 100;
-    if (bt.charging) {
+  const updateBatteryStatus = (battery) => {
+    let level = battery.level * 100 || 100;
+    if (battery.charging) {
       level = -level;
     }
     dispatch({
@@ -37,7 +39,7 @@ const Battery = ({ pct, invert }) => {
     <>
       <div className={`uicon taskIcon ${invert ? "invert" : ""}`}>
         <span className="battery">
-          {btLevel < 0 ? (
+          {batteryLevel < 0 ? (
             <div className="charger">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +72,7 @@ const Battery = ({ pct, invert }) => {
           </svg>
           <div
             className="btFull"
-            style={{ width: `${Math.round(Math.abs(btLevel))}%` }}
+            style={{ width: `${Math.round(Math.abs(batteryLevel))}%` }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -87,8 +89,8 @@ const Battery = ({ pct, invert }) => {
           </div>
         </span>
       </div>
-      {pct ? (
-        <div className="text-xs">{Math.round(Math.abs(btLevel))}%</div>
+      {showPercentage ? (
+        <div className="text-xs">{Math.round(Math.abs(batteryLevel))}%</div>
       ) : null}
     </>
   );

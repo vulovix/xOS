@@ -5,7 +5,7 @@ import { login, logout } from "~/server/auth";
 
 import { installApp, delApp } from "~/actions";
 
-import { Icon, ToolBar } from "~/utils/general";
+import { ToolBar } from "~/utils/general";
 import dirs from "./assets/dir.json";
 
 export const WnTerminal = () => {

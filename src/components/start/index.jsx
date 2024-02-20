@@ -145,7 +145,7 @@ export const DesktopApp = () => {
   );
 };
 
-export const BandPane = () => {
+export const BandPanel = () => {
   const sidepane = useSelector((state) => state.sidepane);
 
   return (
@@ -175,7 +175,7 @@ export const BandPane = () => {
   );
 };
 
-export const SidePane = () => {
+export const SidePanel = () => {
   const sidepane = useSelector((state) => state.sidepane);
   const setting = useSelector((state) => state.setting);
   const tasks = useSelector((state) => state.taskbar);
@@ -326,14 +326,14 @@ export const SidePane = () => {
       </div>
       <div className="p-1 bottomBar">
         <div className="px-3 battery-sidepane">
-          <Battery pct />
+          <Battery showPercentage={true} />
         </div>
       </div>
     </div>
   );
 };
 
-export const CalnWid = () => {
+export const Calendar = () => {
   const sidepane = useSelector((state) => state.sidepane);
   const [loaded, setLoad] = useState(false);
 

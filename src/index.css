@@ -240,7 +240,8 @@ a {
 }
 
 #textpad {
-  font-family: Consolas, monospace;
+  font-family: Consolas, Menlo, monospace;
+  line-height: 1.6;
   font-weight: 500;
 }
 
