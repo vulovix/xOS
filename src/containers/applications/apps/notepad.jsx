@@ -61,7 +61,6 @@ export const Notepad = () => {
 
   const undo = () => {
     const newIndex = indexRef.current - 1;
-    console.log("undo");
     if (newIndex >= 0) {
       onChange(historyRef.current[newIndex]);
       indexRef.current = newIndex;
