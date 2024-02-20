@@ -315,7 +315,6 @@ export const preinstallApps = () => {
 
 // mostly file explorer
 export const handleFileOpen = (id) => {
-  console.log("handleFileOpen", id);
   if (!id) {
     return;
   }

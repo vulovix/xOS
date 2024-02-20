@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ToolBar } from "../../../utils/general";
 
@@ -10,17 +10,22 @@ export const Notepad = () => {
 
   const [value, setValue] = useState("");
   const [fileName, setFileName] = useState("");
+  const historyRef = useRef([value]);
+  const indexRef = useRef(0);
 
   const { active } = files;
 
   const resetState = () => {
     setValue("");
     setFileName("");
+    historyRef.current = [""];
+    indexRef.current = 0;
   };
 
   useEffect(() => {
     if (active) {
       const item = files.data.getId(active);
+      historyRef.current = [item.data.content.value];
       setFileName(item.name);
       setValue(item.data.content.value);
     }
@@ -33,47 +38,84 @@ export const Notepad = () => {
     }
   }, [app.hide]);
 
-  const onChange = (e) => {
+  const onChange = (newValue) => {
+    if (newValue !== historyRef.current[indexRef.current]) {
+      // Slice the history up to the current index, not including the future states
+      historyRef.current = historyRef.current.slice(0, indexRef.current + 1);
+      // Add the new value and increment the index
+      historyRef.current.push(newValue);
+      indexRef.current++;
+      // setValue(newValue);
+    }
+
     if (active) {
       const item = files.data.getId(active);
-      setValue(e.target.value);
+      setValue(newValue);
       item.setData({
         content: {
-          value: e.target.value,
+          value: newValue,
         },
       });
       files.data.saveChanges();
     } else {
-      setValue(e.target.value);
+      setValue(newValue);
+    }
+    // if (newValue !== historyRef.current[indexRef.current]) {
+    //   historyRef.current = [
+    //     ...historyRef.current.slice(0, indexRef.current + 1),
+    //     newValue,
+    //   ]; // Create a new copy of the history
+    //   indexRef.current++;
+    // }
+  };
+
+  const undo = () => {
+    const newIndex = indexRef.current - 1;
+    console.log("undo");
+    if (newIndex >= 0) {
+      onChange(historyRef.current[newIndex]);
+      indexRef.current = newIndex;
     }
   };
 
   const onKeyDown = (event) => {
-    if (event.key === "Tab") {
-      // Prevent the default tab behavior (focus change)
+    if (event.key === "Tab" && !event.shiftKey) {
       event.preventDefault();
 
-      // Set up variables for the selection and the textarea value
       const { selectionStart, selectionEnd } = event.target;
-      const before = value.substring(0, selectionStart); // Text before cursor
-      const after = value.substring(selectionEnd); // Text after cursor
+      const before = value.substring(0, selectionStart);
+      const after = value.substring(selectionEnd);
 
-      // Define the character for indentation (here it's a tab character)
+      const selection = value.substring(selectionStart, selectionEnd);
       const tabCharacter = "\t";
 
-      // Update the value with the tab character inserted
-      setValue(`${before}${tabCharacter}${after}`);
-
-      // Put cursor after the inserted tab character
-      // Use queueMicrotask to ensure the state is updated before we set the selection
-
-      // `queueMicrotask` is used to defer the selection update until after React has
-      // processed the state update, ensuring that the cursor positions are updated accurately. As an alternative, you might use `setTimeout` with a very short delay (such as `0` or `1` millisecond) to achieve a similar result.
-
-      queueMicrotask(() => {
-        event.target.selectionStart = selectionStart + tabCharacter.length;
-        event.target.selectionEnd = selectionEnd + tabCharacter.length;
-      });
+      // If there is no selection, simply insert the tab character at the cursor
+      if (selectionStart === selectionEnd) {
+        onChange(before + tabCharacter + after);
+        queueMicrotask(() => {
+          event.target.selectionStart = selectionStart + tabCharacter.length;
+          event.target.selectionEnd = selectionEnd + tabCharacter.length;
+        });
+      } else {
+        // There is some text selected, handle multi-line indenting
+        const lines = selection.split("\n");
+        // Add a tab character to the beginning of each line
+        const indentedLines = lines
+          .map((line) => tabCharacter + line)
+          .join("\n");
+        onChange(before + indentedLines + after);
+        queueMicrotask(() => {
+          event.target.selectionStart = selectionStart;
+          // Set selection end to include newly added tabs
+          event.target.selectionEnd = selectionStart + indentedLines.length;
+        });
+      }
+    } else if (event.key === "Tab" && event.shiftKey) {
+      // outdent
+      event.preventDefault();
+    } else if ((event.ctrlKey || event.metaKey) && event.key === "z") {
+      event.preventDefault();
+      undo();
     } else if ((event.ctrlKey || event.metaKey) && event.key === "s") {
       // Prevent the default save functionality
       event.preventDefault();
@@ -111,7 +153,7 @@ export const Notepad = () => {
               id="textpad"
               value={value}
               spellCheck="false"
-              onChange={onChange}
+              onChange={(e) => onChange(e.target.value)}
               onKeyDown={onKeyDown}
               className="noteText win11Scroll"
             />
