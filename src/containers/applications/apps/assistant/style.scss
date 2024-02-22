@@ -1,0 +1,159 @@
+body[data-theme="light"] .assistantApp {
+    --bg1: rgb(243, 243, 243);
+    --bg2: #ffffff;
+    --bg3: #f9f9f9;
+    --err-bg: rgb(255, 255, 255, 0.1);
+    --err-txt: #999;
+}
+
+body[data-theme="dark"] .assistantApp {
+    --bg1: rgba(32, 32, 32);
+    --bg2: rgba(255, 255, 255, 0.12);
+    --bg3: rgba(255, 255, 255, 0.08);
+    --err-bg: rgba(255, 255, 255, 0.033);
+    --err-txt: #777;
+}
+
+.assistantApp {
+    background: var(--fakeMica);
+    color: var(--dark-txt);
+    * {
+        box-sizing: border-box;
+    }
+
+    .key-screen,
+    .app-screen{
+        font-size: 0.88rem;
+        line-height: 1.6;
+    }
+    .key-screen{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        form{
+            flex: 0.5;
+            height: 30px;
+            display: flex;
+            padding: 0 10px;
+            border-radius: 4px;
+            background: var(--comp-clr);
+            border-bottom: solid 2px var(--clrPrm);
+            input {
+                width: 100%;
+                background: inherit;
+                color: var(--dark-txt);
+                &::placeholder {
+                    color: var(--txt-col);
+                }
+            }
+        }
+    }
+    .app-screen{
+        //          height  padding footer
+        height: calc(100% - 20px - 32px);
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        ::selection {
+            background-color: var(--clrPrm);
+        }
+        max-width: 940px;
+        width: 100%;
+        margin: 0 auto;
+        main{
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: space-between;
+            .form{
+                width: 100%;
+                margin-top: auto;
+                textarea{
+                    width: 100%;
+                    box-sizing: border-box;
+                    resize: none;
+                    overflow-y: hidden;
+                    width: 100%;
+                    padding: 6px 10px;
+                    border: 2px solid transparent;
+                    color: inherit;
+                    line-height: inherit;
+                    background: var(--bg3);
+                    font-weight: normal;
+                    outline: none;
+                    font-family: inherit;
+                    font-size: inherit;
+                    border-radius: 6px;
+                    // font-size: 15px;
+                    height: 115px;
+                    overflow: auto;
+                    &:focus,
+                    &:active{
+                        border-color: var(--dark-txt);
+                    }
+                    &::placeholder {
+                        color: var(--txt-col);
+                    }
+                }
+            }
+            .conversation{
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                gap: 6px;
+                height: calc(100% - 115px - 10px);
+                overflow: auto;
+                margin-bottom: 10px;
+                .message{
+                    padding: 6px 10px;
+                    border-radius: 6px;
+                    max-width: 69%;
+                    margin-inline-end: auto;
+                    -moz-user-select: text;
+                    user-select: text;
+                    word-break: break-word;
+                    width: -moz-fit-content;
+                    width: fit-content;
+                    text-wrap: pretty;
+
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                }
+                .loading{
+                  padding-left: 1rem;  
+                  padding-bottom: 1rem;
+                }
+                .assistant {
+                    background-color: var(--bg2);
+                }
+                .user {
+                    margin-inline-end: unset;
+                    margin-inline-start: auto;
+                    background-color: var(--bg3);
+                }
+            }
+        }
+        footer{
+            display: flex;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+            // background-color: var(--bg1);
+            div{
+                display: flex;
+                align-items: center;
+            }
+            button{
+                border: none;
+                color: inherit;
+                padding: 0.25rem 0.5rem;
+                border-radius: 4px;
+                background-color: transparent;
+                &:hover{
+                    background: var(--bg2);
+                }
+            }
+        }
+    }
+}

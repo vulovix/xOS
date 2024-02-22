@@ -465,7 +465,7 @@ export const SyncScreen = (props) => {
   );
 };
 
-const Loader = () => (
+export const Loader = () => (
   <div class="update__loader">
     <div class="update__spinner">
       <div class="spinner__point"></div>

@@ -281,6 +281,12 @@ const apps = [
   //   payload: "https://mindhub.dev",
   //   action: "EXTERNAL",
   // },
+  {
+    name: "Assistant",
+    icon: "assistant",
+    type: "app",
+    action: "ASSISTANT",
+  },
 ];
 
 for (let i = 0; i < installed.length; i++) {
