@@ -100,8 +100,6 @@ export const Explorer = () => {
   const [directoryPath, setDirectoryPath] = useState(files.cpath);
   const [searchText, setSearchText] = useState("");
   const dispatch = useDispatch();
-  console.log(directoryPath);
-
   const handleChange = (e) => setDirectoryPath(e.target.value);
   const handleSearchChange = (e) => setSearchText(e.target.value);
 
