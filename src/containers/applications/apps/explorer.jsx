@@ -422,9 +422,9 @@ const NavPane = ({}) => {
           <Dropdown icon="vid" title="Videos" spid="%videos%" />
           <Dropdown icon="pics" title="Pictures" spid="%pictures%" />
           <Dropdown icon="onedrive" title="OneDrive" spid="%onedrive%" />
-          <Dropdown icon="disc" title="Local Disk (C:)" spid="%cdrive%" />
-          <Dropdown icon="disk" title="Local Disk (D:)" spid="%ddrive%" />
         </Dropdown>
+        <Dropdown icon="disc" title="Local Disk (C:)" spid="%cdrive%" />
+        <Dropdown icon="disk" title="Local Disk (D:)" spid="%ddrive%" />
       </div>
     </div>
   );
