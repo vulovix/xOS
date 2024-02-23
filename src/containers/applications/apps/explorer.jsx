@@ -442,7 +442,7 @@ const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected }) => {
       </div>
       {selected ? (
         <div className="ribsec">
-          <Icon src="cut" ui width={18} margin="0 6px" onClick={onRemove} />
+          <Icon src="trash" ui width={18} margin="0 6px" onClick={onRemove} />
         </div>
       ) : (
         <></>
