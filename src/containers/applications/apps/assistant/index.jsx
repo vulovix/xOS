@@ -4,6 +4,19 @@ import { ToolBar } from "~/utils/general";
 import "./style.scss";
 import TextLoading from "~/components/TextLoading";
 
+const generateId = () => Date.now().toString(36).toUpperCase();
+
+const getDefaultConversation = () => ({
+  message: "",
+  messages: [
+    {
+      role: "assistant",
+      content: "Hello. How can I help you?",
+    },
+  ],
+  id: generateId(),
+});
+
 export const Assistant = () => {
   const app = useSelector((state) => state.apps.assistant);
 
@@ -11,18 +24,8 @@ export const Assistant = () => {
     localStorage.getItem("xOS_OpenAI_API_KEY") || ""
   );
   const [view, setView] = useState(key ? "app" : "key"); // key || app
-  const generateId = () => Date.now().toString(36);
 
-  const [appState, setAppState] = useState({
-    message: "",
-    messages: [
-      {
-        role: "assistant",
-        content: "Hello. How can I help you?",
-      },
-    ],
-    id: generateId(),
-  });
+  const [appState, setAppState] = useState(getDefaultConversation());
 
   const onKeySubmit = (e, value) => {
     e.preventDefault();
@@ -33,24 +36,15 @@ export const Assistant = () => {
     }
   };
 
-  // const onSaveTranscript = () => {
-  //   console.log("Saving transcript.");
-  // };
+  const onNewConversation = () => {
+    setAppState(getDefaultConversation());
+  };
 
   const onReset = () => {
     localStorage.removeItem("xOS_OpenAI_API_KEY");
     setView("key");
     setKey("");
-    setAppState({
-      message: "",
-      messages: [
-        {
-          role: "assistant",
-          content: "Hello. How can I help you?",
-        },
-      ],
-      id: generateId(),
-    });
+    onNewConversation();
   };
 
   const sendMessageToChatGPT = async (messages) => {
@@ -122,6 +116,7 @@ export const Assistant = () => {
       {view === "key" ? <KeyScreen onSubmit={onKeySubmit} /> : <></>}
       {view === "app" ? (
         <AppScreen
+          onNewConversation={onNewConversation}
           conversationID={appState.id}
           messages={appState.messages}
           loading={appState.loading}
@@ -139,11 +134,51 @@ const AppScreen = ({
   conversationID,
   messages,
   onSubmit,
-  onSaveTranscript,
+  onNewConversation,
   onReset,
   loading,
 }) => {
   const [value, setValue] = useState("");
+
+  // const ;
+  const files = useSelector((state) => state.files);
+
+  const onSaveTranscript = () => {
+    const documents = files.data.special["%documents%"];
+    const documentsFolder = files.data.getId(documents);
+    let assistantFolder = documentsFolder.data.find(
+      (x) => x.name === "Assistant"
+    );
+    if (!assistantFolder) {
+      const documentsPath = files.data.getPath(documentsFolder.id);
+      assistantFolder = files.data.addByPath(documentsPath, {
+        type: "folder",
+        name: "Assistant",
+      });
+    }
+    const assistantPath = files.data.getPath(assistantFolder.id);
+    const fileName = `Conversation - ${conversationID}`;
+    const existingFile = assistantFolder.data.find(
+      (file) => file.name === fileName
+    );
+    if (existingFile) {
+      files.data.removeItem(existingFile.id);
+    }
+    files.data.addByPath(assistantPath, {
+      type: "file",
+      name: fileName,
+      info: { icon: "file" },
+      data: {
+        content: {
+          value: messages
+            .map(
+              (message) => `${message.role.toUpperCase()}: ${message.content}`
+            )
+            .join("\n"),
+        },
+      },
+    });
+  };
 
   const onKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -188,7 +223,8 @@ const AppScreen = ({
       <footer>
         <div>ID: {conversationID}</div>
         <div>
-          {/* <button onClick={onSaveTranscript}>Save Transcript</button> */}
+          <button onClick={onNewConversation}>New Conversation</button>
+          <button onClick={onSaveTranscript}>Save Transcript</button>
           <button onClick={onReset}>Reset</button>
         </div>
       </footer>
