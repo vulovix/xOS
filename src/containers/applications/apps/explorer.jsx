@@ -431,13 +431,13 @@ const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected }) => {
   return (
     <div className="msribbon flex">
       <div className="ribsec">
-        <div className="drdwcont flex" onClick={onAddFile}>
-          <Icon src="new" ui width={18} margin="0 6px" />
-          <span>New File</span>
-        </div>
         <div className="drdwcont flex" onClick={onAddFolder}>
-          <Icon src="new" ui width={18} margin="0 6px" />
-          <span>New Folder</span>
+          <Icon src="add-folder" ui width={18} margin="0 6px" />
+          {/* <span>New Folder</span> */}
+        </div>
+        <div className="drdwcont flex" onClick={onAddFile}>
+          <Icon src="add-file" ui width={18} margin="0 6px" />
+          {/* <span>New File</span> */}
         </div>
       </div>
       {selected ? (

@@ -32,3 +32,4 @@ An OS environment in the browser.
 - [upstream](https://github.com/blueedgetechno/win11React)
 
 - [Logo](https://www.flaticon.com/free-icon/menu_6858536)
+- [Icons (Add Folder, Add File)](https://www.flaticon.com)
