@@ -100,6 +100,9 @@ export const Explorer = () => {
   const [directoryPath, setDirectoryPath] = useState(files.cpath);
   const [searchText, setSearchText] = useState("");
   const dispatch = useDispatch();
+  const isSelectedSpecial = selected
+    ? !!files.data.getId(selected).info.spid
+    : false;
   const handleChange = (e) => setDirectoryPath(e.target.value);
   const handleSearchChange = (e) => setSearchText(e.target.value);
 
@@ -216,6 +219,7 @@ export const Explorer = () => {
           onRemove={onRemove}
           onAddFile={onAddFile}
           onAddFolder={onAddFolder}
+          isSpecial={isSelectedSpecial}
         />
         <div className="restWindow flex-grow flex flex-col">
           <div className="sec1">
@@ -307,10 +311,9 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [editValue, setEditValue] = useState("");
   const files = useSelector((state) => state.files);
-  const special = useSelector((state) => state.files.data.special);
+  // const special = useSelector((state) => state.files.data.special);
   const fdata = files.data.getId(files.cdir);
   const dispatch = useDispatch();
-
   const handleClick = (e) => {
     e.stopPropagation();
     setSelect(e.target.dataset.id);
@@ -418,16 +421,16 @@ const NavPane = ({}) => {
           <Dropdown icon="music" title="Music" spid="%music%" />
           <Dropdown icon="vid" title="Videos" spid="%videos%" />
           <Dropdown icon="pics" title="Pictures" spid="%pictures%" />
+          <Dropdown icon="onedrive" title="OneDrive" spid="%onedrive%" />
           <Dropdown icon="disc" title="Local Disk (C:)" spid="%cdrive%" />
           <Dropdown icon="disk" title="Local Disk (D:)" spid="%ddrive%" />
         </Dropdown>
-        <Dropdown icon="onedrive" title="OneDrive" spid="%onedrive%" />
       </div>
     </div>
   );
 };
 
-const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected }) => {
+const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected, isSpecial }) => {
   return (
     <div className="msribbon flex">
       <div className="ribsec">
@@ -440,13 +443,14 @@ const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected }) => {
           {/* <span>New File</span> */}
         </div>
       </div>
-      {selected ? (
+      {selected && !isSpecial ? (
         <div className="ribsec">
           <Icon src="delete" ui width={18} margin="0 6px" onClick={onRemove} />
         </div>
       ) : (
         <></>
       )}
+      {/* <Icon src="cut" ui width={18} margin="0 6px" /> */}
       {/* <Icon src="cut" ui width={18} margin="0 6px" />
         <Icon src="copy" ui width={18} margin="0 6px" />
         <Icon src="rename" ui width={18} margin="0 6px" onClick={onUpdate} />

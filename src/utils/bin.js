@@ -297,6 +297,9 @@ export class Bin {
         "Cannot remove the root item or items without a folder parent."
       );
     }
+    if (itemToRemove.info.spid) {
+      throw new Error("Cannot remove special folder.");
+    }
 
     // Filter out the item to remove
     parentItem.data = parentItem.data.filter((item) => item !== itemToRemove);
