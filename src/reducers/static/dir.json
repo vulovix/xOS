@@ -11,7 +11,7 @@
         "name": "Users",
         "info": {
           "spid": "%users%",
-          "icon": "user"
+          "icon": "users"
         },
         "data": {
           "X": {
