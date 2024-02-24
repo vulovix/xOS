@@ -9,6 +9,10 @@
       "Users": {
         "type": "folder",
         "name": "Users",
+        "info": {
+          "spid": "%users%",
+          "icon": "user"
+        },
         "data": {
           "X": {
             "type": "folder",
