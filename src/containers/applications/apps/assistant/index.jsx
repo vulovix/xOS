@@ -177,7 +177,7 @@ const AppScreen = ({
       data: {
         content: {
           value: messages
-            .filter((message) => message.role === "system")
+            .filter((message) => message.role !== "system")
             .map(
               (message) => `${message.role.toUpperCase()}: ${message.content}`
             )
