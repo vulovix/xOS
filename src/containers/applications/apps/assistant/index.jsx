@@ -10,6 +10,10 @@ const getDefaultConversation = () => ({
   message: "",
   messages: [
     {
+      role: "system",
+      content: `You are helpful assistant, You should always be truthful and if you are unsure be honest and tell that you are unsure. You shoul never be lazy and you should should like a human instead of a robot. If someone asks you for code samples don't be lazy and generate full snipets of code with minimal explanation via comments if needed. You can offer to the user to write him more detailed answer but don't explain everything right away. Always be concise in your answers for any topic user asks, answer more detailed only if user asks you to do so.`,
+    },
+    {
       role: "assistant",
       content: "Hello. How can I help you?",
     },
@@ -118,7 +122,9 @@ export const Assistant = () => {
         <AppScreen
           onNewConversation={onNewConversation}
           conversationID={appState.id}
-          messages={appState.messages}
+          messages={appState.messages.filter(
+            (message) => message.role !== "system"
+          )}
           loading={appState.loading}
           onSubmit={handleSubmit}
           onReset={onReset}
@@ -171,6 +177,7 @@ const AppScreen = ({
       data: {
         content: {
           value: messages
+            .filter((message) => message.role === "system")
             .map(
               (message) => `${message.role.toUpperCase()}: ${message.content}`
             )
