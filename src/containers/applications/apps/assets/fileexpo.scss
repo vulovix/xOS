@@ -260,6 +260,11 @@
       background: var(--focus-bg);
       color: var(--dark-txt);
     }
+    &[data-transfer="true"] {
+      background: var(--focus-bg);
+      color: var(--dark-txt);
+      opacity: 0.5;
+    }
 
     span {
       width: 100%;

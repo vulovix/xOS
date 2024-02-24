@@ -2,7 +2,7 @@ import { allApps } from "../utils";
 
 let dev = "";
 if (import.meta.env.MODE == "development") {
-  dev = ""; // set the name (lowercase) of the app you are developing so that it will be opened on refresh
+  dev = "explorer"; // set the name (lowercase) of the app you are developing so that it will be opened on refresh
 }
 
 const initialState = {};

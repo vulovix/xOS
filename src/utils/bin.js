@@ -321,4 +321,108 @@ export class Bin {
 
     this.refresh();
   }
+
+  cutItem(sourceId, destinationPath) {
+    // Parse the paths to get item and destination IDs
+    // const sourceId = this.parsePath(sourcePath);
+    const destinationId = this.parsePath(destinationPath);
+
+    if (!sourceId || !destinationId) {
+      throw new Error(
+        `Invalid path(s): ${this.getPath(sourceId)} or ${destinationPath}`
+      );
+    }
+
+    if (sourceId === destinationId) {
+      throw new Error("Cannot cut a folder into itself.");
+    }
+
+    const sourceItem = this.lookup[sourceId];
+    const destinationFolder = this.lookup[destinationId];
+
+    if (!sourceItem || !destinationFolder) {
+      throw new Error("Source or destination does not exist.");
+    }
+
+    if (destinationFolder.type !== "folder") {
+      throw new Error("Destination path is not a folder.");
+    }
+
+    let current = destinationFolder;
+    while (current) {
+      if (current === sourceItem) {
+        throw new Error("Cannot cut a folder into one of its descendants.");
+      }
+      current = current.host;
+    }
+
+    // Remove the item from its current parent folder
+    const parentItem = sourceItem.host;
+    if (parentItem && parentItem.data && parentItem.type === "folder") {
+      parentItem.data = parentItem.data.filter((item) => item !== sourceItem);
+    } else {
+      throw new Error("Source item has no parent folder or is a root item.");
+    }
+
+    // Add the item to the new parent folder
+    destinationFolder.addChild({
+      type: sourceItem.type,
+      name: sourceItem.name,
+      info: sourceItem.info,
+      data: sourceItem.data,
+    });
+
+    // Refresh to update the tree structure, lookups and special identifiers
+    this.refresh();
+  }
+
+  copyItem(sourceId, destinationPath) {
+    // Parse the paths to get item and destination IDs
+    const destinationId = this.parsePath(destinationPath);
+
+    if (!sourceId || !destinationId) {
+      throw new Error(
+        `Invalid path(s): ${this.getPath(sourceId)} or ${destinationPath}`
+      );
+    }
+
+    const sourceItem = this.lookup[sourceId];
+    const destinationFolder = this.lookup[destinationId];
+
+    if (!sourceItem || !destinationFolder) {
+      throw new Error("Source or destination does not exist.");
+    }
+
+    if (destinationFolder.type !== "folder") {
+      throw new Error("Destination path is not a folder.");
+    }
+
+    // Function to clone an item and its children (if any)
+    const cloneItem = (item, newHost) => {
+      const clonedItem = new Item({
+        type: item.type,
+        name: item.name,
+        info: { ...item.info },
+        data: item.data,
+        host: newHost,
+      });
+
+      if (item.type === "folder") {
+        clonedItem.setData(
+          item.data.map((child) => cloneItem(child, clonedItem))
+        );
+      }
+
+      return clonedItem;
+    };
+
+    // Clone the source item
+    const clonedItem = cloneItem(sourceItem, destinationFolder);
+
+    // Add the cloned item to the new parent folder
+    destinationFolder.data.push(clonedItem);
+
+    // Refresh to update the tree structure, lookups and special identifiers
+    this.refresh();
+  }
 }

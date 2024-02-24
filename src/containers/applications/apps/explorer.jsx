@@ -100,8 +100,11 @@ export const Explorer = () => {
   const [directoryPath, setDirectoryPath] = useState(files.cpath);
   const [searchText, setSearchText] = useState("");
   const dispatch = useDispatch();
+  const selectedItem = files.data.getId(selected);
   const isSelectedSpecial = selected
-    ? !!files.data.getId(selected).info.spid
+    ? selectedItem
+      ? !!selectedItem.info.spid
+      : false
     : false;
   const handleChange = (e) => setDirectoryPath(e.target.value);
   const handleSearchChange = (e) => setSearchText(e.target.value);
@@ -137,6 +140,32 @@ export const Explorer = () => {
   };
   const onRemove = () => {
     files.data.removeItem(selected);
+  };
+  const onTransfer = (transferType) => {
+    dispatch({
+      type: "FILETRANSFER",
+      payload: {
+        itemId: selected,
+        transferType,
+      },
+    });
+  };
+
+  const onPaste = () => {
+    try {
+      const destinationPath = directoryPath;
+      const action = files.transferType === "copy" ? "copyItem" : "cutItem";
+      files.data[action](files.transferId, destinationPath);
+    } catch (e) {
+      console.error(e);
+    }
+    dispatch({
+      type: "FILETRANSFER",
+      payload: {
+        itemId: undefined,
+        transferType: undefined,
+      },
+    });
   };
 
   const DirCont = () => {
@@ -215,11 +244,14 @@ export const Explorer = () => {
       />
       <div className="windowScreen flex flex-col">
         <Ribbon
+          onPaste={onPaste}
           selected={selected}
           onRemove={onRemove}
           onAddFile={onAddFile}
+          onTransfer={onTransfer}
           onAddFolder={onAddFolder}
           isSpecial={isSelectedSpecial}
+          isTransfer={!!files.transferId}
         />
         <div className="restWindow flex-grow flex flex-col">
           <div className="sec1">
@@ -360,6 +392,7 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
                   // prtclk
                   data-id={item.id}
                   data-focus={selected == item.id}
+                  data-transfer={item.id === files.transferId}
                   onClick={handleClick}
                   onDoubleClick={handleDouble}
                 >
@@ -430,7 +463,16 @@ const NavPane = ({}) => {
   );
 };
 
-const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected, isSpecial }) => {
+const Ribbon = ({
+  onAddFile,
+  onAddFolder,
+  onRemove,
+  onPaste,
+  onTransfer,
+  selected,
+  isSpecial,
+  isTransfer,
+}) => {
   return (
     <div className="msribbon flex">
       <div className="ribsec">
@@ -445,16 +487,43 @@ const Ribbon = ({ onAddFile, onAddFolder, onRemove, selected, isSpecial }) => {
       </div>
       {selected && !isSpecial ? (
         <div className="ribsec">
-          <Icon src="delete" ui width={18} margin="0 6px" onClick={onRemove} />
+          <Icon onClick={onRemove} src="delete" ui width={18} margin="0 6px" />
         </div>
       ) : (
         <></>
       )}
-      {/* <Icon src="cut" ui width={18} margin="0 6px" /> */}
+      {selected && !isSpecial ? (
+        <div className="ribsec">
+          <Icon
+            onClick={(e) => onTransfer("copy")}
+            src="copy"
+            ui
+            width={18}
+            margin="0 6px"
+          />
+          <Icon
+            onClick={(e) => onTransfer("cut")}
+            src="cut"
+            ui
+            width={18}
+            margin="0 6px"
+          />
+        </div>
+      ) : (
+        <></>
+      )}
+
+      {isTransfer ? (
+        <div className="ribsec">
+          <Icon src="paste" onClick={onPaste} ui width={18} margin="0 6px" />
+        </div>
+      ) : (
+        <></>
+      )}
+
       {/* <Icon src="cut" ui width={18} margin="0 6px" />
         <Icon src="copy" ui width={18} margin="0 6px" />
         <Icon src="rename" ui width={18} margin="0 6px" onClick={onUpdate} />
-        <Icon src="paste" ui width={18} margin="0 6px" /> */}
       {/* <Icon src="share" ui width={18} margin="0 6px" /> */}
       <div className="ribsec">
         <div className="drdwcont flex">

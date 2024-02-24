@@ -6,6 +6,8 @@ const initialState = {
   hist: [],
   hid: 0,
   view: 1,
+  active: undefined,
+  transfer: undefined,
 };
 
 initialState.hist.push(initialState.cdir);
@@ -59,6 +61,11 @@ const fileReducer = (defaultState = initialState, action) => {
 
     case "FILECLOSE":
       state.active = null;
+      break;
+
+    case "FILETRANSFER":
+      state.transferId = action.payload.itemId;
+      state.transferType = action.payload.transferType;
       break;
 
     default:
