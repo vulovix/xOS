@@ -354,6 +354,7 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
 
   const handleDouble = (e) => {
     e.stopPropagation();
+    // setSelect(e.target.dataset.id);
     handleFileOpen(e.target.dataset.id);
   };
 
@@ -375,7 +376,7 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
     setIsEditMode(false);
   };
 
-  const clickHandler = useOnClick(handleClick, handleDouble);
+  // const clickHandler = useOnClick(handleClick, handleDouble);
 
   return (
     <div
@@ -396,7 +397,7 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
                   data-id={item.id}
                   data-focus={selected == item.id}
                   data-transfer={item.id === files.transferId}
-                  onClick={clickHandler}
+                  onClick={handleDouble}
                 >
                   <Image src={`icon/win/${item.info.icon}`} />
                   <span
@@ -413,7 +414,7 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
                     }}
                     onBlur={() => handleOnEdit(item)}
                     onInput={(e) => setEditValue(e.currentTarget.textContent)}
-                    style={{ pointerEvents: "all" }}
+                    style={{ pointerEvents: "all", cursor: "pointer" }}
                   >
                     {isEditMode && selected === item.id
                       ? editValue || item.name
