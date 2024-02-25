@@ -15,6 +15,7 @@ const useOnClick = (singleClick, doubleClick, delay = 250) => {
 
   const handler = useCallback(
     (e) => {
+      e.preventDefault();
       // Cancel any ongoing event handling
       if (timerId.current) {
         clearTimeout(timerId.current);
