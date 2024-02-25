@@ -256,6 +256,7 @@
   }
 
   .conticon {
+    transition: all 250ms ease;
     &[data-focus="true"] {
       background: var(--focus-bg);
       color: var(--dark-txt);

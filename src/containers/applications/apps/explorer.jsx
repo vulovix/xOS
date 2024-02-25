@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Icon, Image, ToolBar } from "../../../utils/general";
-import { dispatchAction, handleFileOpen } from "../../../actions";
+import useOnClick from "~/hooks/useClick";
+import { Icon, Image, ToolBar } from "~/utils/general";
+import { dispatchAction, handleFileOpen } from "~/actions";
 import "./assets/fileexpo.scss";
 
 const NavTitle = (props) => {
@@ -374,6 +375,8 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
     setIsEditMode(false);
   };
 
+  const clickHandler = useOnClick(handleClick, handleDouble);
+
   return (
     <div
       className="contentarea"
@@ -393,8 +396,7 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
                   data-id={item.id}
                   data-focus={selected == item.id}
                   data-transfer={item.id === files.transferId}
-                  onClick={handleClick}
-                  onDoubleClick={handleDouble}
+                  onClick={clickHandler}
                 >
                   <Image src={`icon/win/${item.info.icon}`} />
                   <span
