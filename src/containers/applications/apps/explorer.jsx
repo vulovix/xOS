@@ -342,7 +342,7 @@ export const Explorer = () => {
 
 const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editValue, setEditValue] = useState("");
+  // const [editValue, setEditValue] = useState("");
   const files = useSelector((state) => state.files);
   // const special = useSelector((state) => state.files.data.special);
   const fdata = files.data.getId(files.cdir);
@@ -369,11 +369,10 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
   };
 
   const handleOnEdit = (item) => {
-    if (editValue.trim()) {
-      onUpdate(item.id, editValue.trim());
-      setEditValue("");
+    if (item.name.trim()) {
+      onUpdate(item.id, item.name.trim());
+      setIsEditMode(false);
     }
-    setIsEditMode(false);
   };
 
   // const clickHandler = useOnClick(handleClick, handleDouble);
@@ -409,17 +408,18 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
-                        handleOnEdit(item);
+                        e.preventDefault();
+                        handleOnEdit({ ...item, name: e.target.innerText });
                       }
                     }}
-                    onBlur={() => handleOnEdit(item)}
-                    onInput={(e) => setEditValue(e.currentTarget.textContent)}
+                    onBlur={(e) =>
+                      handleOnEdit({ ...item, name: e.target.innerText })
+                    }
                     style={{ pointerEvents: "all", cursor: "pointer" }}
-                  >
-                    {isEditMode && selected === item.id
-                      ? editValue || item.name
-                      : item.name}
-                  </span>
+                    dangerouslySetInnerHTML={{
+                      __html: item.name,
+                    }}
+                  />
                 </div>
               )
             );
