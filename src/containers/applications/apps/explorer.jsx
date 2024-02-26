@@ -402,19 +402,33 @@ const ContentArea = ({ searchtxt, selected, setSelect, onUpdate }) => {
                   <span
                     contentEditable={isEditMode}
                     className={`${isEditMode ? "editable-area" : ""}`}
-                    onClick={() => {
+                    onClick={(e) => {
                       setSelect(item.id);
                       setIsEditMode(true);
+                      queueMicrotask(() => e.target.focus());
+                    }}
+                    onFocus={(e) => {
+                      var range = document.createRange();
+                      range.setStartBefore(e.target.firstChild);
+                      range.setEndAfter(e.target.lastChild);
+                      var sel = window.getSelection();
+                      sel.removeAllRanges();
+                      sel.addRange(range);
+                      // sel.collapseToEnd();
                     }}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         e.preventDefault();
                         handleOnEdit({ ...item, name: e.target.innerText });
                       }
+                      if (e.key === "Escape") {
+                        e.target.innerText = item.name;
+                        setIsEditMode(false);
+                      }
                     }}
-                    onBlur={(e) =>
-                      handleOnEdit({ ...item, name: e.target.innerText })
-                    }
+                    onBlur={(e) => {
+                      handleOnEdit({ ...item, name: e.target.innerText });
+                    }}
                     style={{ pointerEvents: "all", cursor: "pointer" }}
                     dangerouslySetInnerHTML={{
                       __html: item.name,
