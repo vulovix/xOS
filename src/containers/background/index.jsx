@@ -391,12 +391,15 @@ export const SyncScreen = (props) => {
             synchronizationContext
               .read(synchronizationApps[desktopApp.name].collection)
               .then((data) => {
-                const synchronizationApp = synchronizationApps[desktopApp.name];
-                communicationContext.store(
-                  synchronizationApp.collection,
-                  synchronizationApp.storageKey,
-                  data.data
-                );
+                if (data) {
+                  const synchronizationApp =
+                    synchronizationApps[desktopApp.name];
+                  communicationContext.store(
+                    synchronizationApp.collection,
+                    synchronizationApp.storageKey,
+                    data.data
+                  );
+                }
                 waitWindowToLoad(() => {
                   dispatch({
                     type: desktopApp.action,
@@ -418,11 +421,13 @@ export const SyncScreen = (props) => {
           synchronizationContext
             .read(synchronizationApps[desktopApp.name].collection)
             .then((data) => {
-              const synchronizationApp = synchronizationApps[desktopApp.name];
-              communicationContext.storeLocally(
-                synchronizationApp.storageKey,
-                data.data
-              );
+              if (data) {
+                const synchronizationApp = synchronizationApps[desktopApp.name];
+                communicationContext.storeLocally(
+                  synchronizationApp.storageKey,
+                  data.data
+                );
+              }
               waitWindowToLoad(() => {
                 dispatch({
                   type: desktopApp.action,
